@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:minHeight="80dp"
+    android:background="@drawable/card_round_box_normal"
+    android:layout_margin="2dp"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/dlg_fragment_okcancel_content"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/dlg_fragment_okcancel_btn_ok"
+            android:layout_weight="1"
+            android:text="OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/dlg_fragment_okcancel_btn_cancel"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
