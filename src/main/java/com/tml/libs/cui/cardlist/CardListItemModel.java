@@ -29,4 +29,7 @@ public class CardListItemModel {
     }
 
 
+    public boolean hasCustomBg() {
+        return false;
+    }
 }

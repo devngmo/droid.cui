@@ -14,7 +14,10 @@ import com.tml.libs.cui.R;
 public class CardText extends CardListItemModel {
     private static final String TAG = "CardText";
 
+
+    Drawable customBg = null;
     String id, text;
+    int textColor = 0xff000000;
     public String getID() {
         return id;
     }
@@ -35,12 +38,30 @@ public class CardText extends CardListItemModel {
     View viewBg;
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         viewBg = cardItemHolder.itemView;
-        ((TextView)cardItemHolder.itemView.findViewById(R.id.text1)).setText(getText());
+        TextView txt = ((TextView)cardItemHolder.itemView.findViewById(R.id.text1));
+        txt.setText(getText());
+        txt.setTextColor(textColor);
+
+        if (customBg != null)
+            viewBg.setBackground(customBg);
+    }
+
+    @Override
+    public boolean hasCustomBg() {
+        return customBg != null;
     }
 
     public void setBgDrawable(Drawable bg) {
-        viewBg.setBackground(bg);
+        customBg = bg;
+        if (viewBg != null)
+            viewBg.setBackground(bg);
     }
 
 
+    public void setTextColor(int textColor) {
+        this.textColor = textColor;
+        if (viewBg != null) {
+            ((TextView)viewBg.findViewById(R.id.text1)).setTextColor(textColor);
+        }
+    }
 }

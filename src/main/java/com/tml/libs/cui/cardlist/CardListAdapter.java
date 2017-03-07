@@ -27,6 +27,15 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         lastSelectedCardPosition = -1;
     }
 
+    boolean enableCardCustomBackground = false;
+    public boolean isEnableCardCustomBackground() {
+        return enableCardCustomBackground;
+    }
+
+    public void setEnableCardCustomBackground(boolean enabled) {
+        this.enableCardCustomBackground = enabled;
+    }
+
     public interface CardChildViewClickListener {
         void onClick(int cardPosition, CardListAdapter.CardItemHolder card, int viewPosition, View v);
     }
@@ -85,7 +94,7 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
     public interface  CardClickListener {
         void onClickCard(int index);
-        void onLongClickCard(int index);
+        boolean onLongClickCard(int index);
     }
 
     CardClickListener mCardClickListener = null;
@@ -148,11 +157,16 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 //            Log.d(TAG, "LAST SELECTION: pos " + lastSelectedCardPosition + " model " + selectedModel.getID());
 //        Log.d(TAG, "BIND: pos " + position + " model " + model.getID());
 
-        if (model.equals(selectedModel))
-            model.setBgDrawable(getVisualStyleDrawable(model.bgSelectedVSName));
-        else
-            model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
-
+        if (isEnableCardCustomBackground() == false) {
+            if (model.equals(selectedModel))
+                model.setBgDrawable(getVisualStyleDrawable(model.bgSelectedVSName));
+            else
+                model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
+        }
+        else {
+            if (model.hasCustomBg() == false)
+                model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,8 +177,8 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mCardClickListener.onLongClickCard(position);
-                return false;
+                return mCardClickListener.onLongClickCard(position);
+
             }
         });
 
