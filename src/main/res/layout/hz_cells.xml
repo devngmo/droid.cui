@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <FrameLayout
+                android:id="@+id/hz_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <View
+                    android:id="@+id/hz_sel_indicator"
+                    android:background="@drawable/card_round_box_highlight"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp">
+                </View>
+                <LinearLayout
+                    android:id="@+id/hz_cells_item_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+</FrameLayout>

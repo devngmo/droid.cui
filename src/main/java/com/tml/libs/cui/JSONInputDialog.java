@@ -39,6 +39,26 @@ public class JSONInputDialog extends Dialog {
     private static final int HZ_CELL_SIZE = 56;
     private static final int HZ_CELL_MARGIN = 8;
 
+    public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, JSONDialogListener listener) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("title", title);
+            obj.put("msg", message);
+            JSONArray fields = new JSONArray();
+            JSONObject fieldText = new JSONObject();
+            fieldText.put("fieldType", "text");
+            fieldText.put("name", "text1");
+            fieldText.put("text", "text");
+            fields.put(fieldText);
+            obj.put("fields", fields);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONInputDialog dlg = new JSONInputDialog(c, obj, listener);
+        return dlg;
+    }
+
     public interface JSONDialogListener {
         boolean onConfirm(JSONObject jsonResult);
         void onCancel();
