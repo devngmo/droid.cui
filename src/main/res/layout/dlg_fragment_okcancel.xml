@@ -2,60 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     android:minHeight="300dp"
     android:minWidth="300dp"
-    android:background="@drawable/card_round_box_normal"
-    android:layout_margin="2dp"
-    >
-    <TextView
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:textColor="#ff0000ff"
-        android:id="@+id/txt_title"
-        android:text="Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+    android:orientation="vertical">
 
     <TextView
-        android:layout_marginTop="15dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="#ff000000"
-        android:text="Message"
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0099ff"
+        android:gravity="center"
+        android:text="Title"
+        android:textAlignment="center"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="#ffFFFFff" />
+
+    <TextView
         android:id="@+id/txt_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Message"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="#ff000000" />
 
     <LinearLayout
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
         android:id="@+id/dlg_fragment_okcancel_content"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/dlg_fragment_okcancel_btn_ok"
-            android:layout_weight="1"
-            android:text="OK"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK" />
+
         <Button
             android:id="@+id/dlg_fragment_okcancel_btn_cancel"
-            android:layout_weight="1"
-            android:text="Cancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" />
     </LinearLayout>
 </LinearLayout>
