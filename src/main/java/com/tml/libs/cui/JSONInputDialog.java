@@ -38,6 +38,8 @@ import java.util.Map;
 public class JSONInputDialog extends Dialog {
     private static final int HZ_CELL_SIZE = 56;
     private static final int HZ_CELL_MARGIN = 8;
+    public static final String USERPASS_FIELD_ID = "id";
+    public static final String USERPASS_FIELD_PASS = "pass";
 
     public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, JSONDialogListener listener) {
         JSONObject obj = new JSONObject();
@@ -57,6 +59,32 @@ public class JSONInputDialog extends Dialog {
         }
         JSONInputDialog dlg = new JSONInputDialog(c, obj, listener);
         return dlg;
+    }
+
+    public static JSONObject createParamsUserPass(String title, String message) {
+        JSONObject obj= new JSONObject();
+        try {
+            obj.put("title", title);
+            obj.put("msg", message);
+            JSONArray fields = new JSONArray();
+            JSONObject fieldID = new JSONObject();
+            fieldID.put("fieldType", "text");
+            fieldID.put("name", USERPASS_FIELD_ID);
+            fieldID.put("text", "name");
+            fields.put(fieldID);
+
+            JSONObject fieldPass = new JSONObject();
+            fieldPass.put("fieldType", "text");
+            fieldPass.put("name", USERPASS_FIELD_PASS);
+            fieldPass.put("text", "pass");
+            fields.put(fieldPass);
+
+            obj.put("fields", fields);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return obj;
     }
 
     public interface JSONDialogListener {

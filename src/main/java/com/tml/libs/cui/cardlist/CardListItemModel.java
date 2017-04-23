@@ -3,11 +3,13 @@ package com.tml.libs.cui.cardlist;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.tml.libs.cutils.LoggableClass;
+
 /**
  * Created by TML on 04/01/2017.
  */
 
-public class CardListItemModel {
+public class CardListItemModel extends LoggableClass {
     private static final String TAG = "CardListItemModel";
     public static final String VSNAME_NORMAL = "normal";
     public static final String VSNAME_SELECTED = "selected";
