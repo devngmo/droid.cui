@@ -23,11 +23,11 @@ public class CardListItemModel extends LoggableClass {
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         itemHolder = cardItemHolder;
-        Log.w(TAG, "onBindView: NOT IMPLEMENTED");
+//        Log.w(TAG, "onBindView: NOT IMPLEMENTED");
     }
 
     public void setBgDrawable(Drawable bg) {
-        Log.w(TAG, "setBgDrawable: NOT IMPLEMENTED");
+//        Log.w(TAG, "setBgDrawable: NOT IMPLEMENTED");
     }
 
 
