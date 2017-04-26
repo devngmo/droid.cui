@@ -23,6 +23,11 @@ public class FragmentCardList extends Fragment {
         return rvItemsAdapter;
     }
 
+    public void setRvItemsAdapter(RecyclerView.Adapter<CardListAdapter.CardItemHolder> rvItemsAdapter) {
+        this.rvItemsAdapter = rvItemsAdapter;
+        rvItems.setAdapter(rvItemsAdapter);
+    }
+
     public FragmentCardList() {
     }
 

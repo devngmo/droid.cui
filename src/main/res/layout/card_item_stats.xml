@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/card_round_box_normal"
+    android:layout_marginTop="2dp"
+    >
+    <android.support.v7.widget.AppCompatTextView
+        android:textSize="16dp"
+        android:textColor="#0000ff"
+        android:text="Bitcoin"
+        android:id="@+id/cis_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:textSize="15dp"
+            android:textColor="#000000"
+            android:id="@+id/cis_props"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="5 x PC LV1:\n1 x PC LV2:\ntotal:\nprice:"
+            android:layout_weight="1"
+            />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:textAlignment="viewEnd"
+            android:layout_gravity="end"
+            android:textSize="15dp"
+            android:textColor="#000000"
+            android:text="2 coin/week\n 3 coin/week\n5 coin/week\n300$"
+            android:id="@+id/cis_values"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>
