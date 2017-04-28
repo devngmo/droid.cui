@@ -41,7 +41,7 @@ public class JSONInputDialog extends Dialog {
     public static final String USERPASS_FIELD_ID = "id";
     public static final String USERPASS_FIELD_PASS = "pass";
 
-    public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, JSONDialogListener listener) {
+    public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, String fieldName, JSONDialogListener listener) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("title", title);
@@ -49,8 +49,8 @@ public class JSONInputDialog extends Dialog {
             JSONArray fields = new JSONArray();
             JSONObject fieldText = new JSONObject();
             fieldText.put("fieldType", "text");
-            fieldText.put("name", "text1");
-            fieldText.put("text", "text");
+            fieldText.put("name", fieldName);
+            fieldText.put("text", "");
             fields.put(fieldText);
             obj.put("fields", fields);
 
@@ -85,6 +85,19 @@ public class JSONInputDialog extends Dialog {
         }
 
         return obj;
+    }
+
+    public static JSONObject createTextField(String fieldName, String value) {
+        JSONObject f= null;
+        try {
+            f = new JSONObject();
+            f.put("fieldType", "text");
+            f.put("name", fieldName);
+            f.put("text", value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return f;
     }
 
     public interface JSONDialogListener {

@@ -17,21 +17,23 @@ public class CardListItemModel extends LoggableClass {
     public String bgSelectedVSName = VSNAME_SELECTED;
     CardListAdapter.CardItemHolder itemHolder;
 
+    Drawable customBg = null;
     public String getID() {
         return null;
     }
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         itemHolder = cardItemHolder;
-//        Log.w(TAG, "onBindView: NOT IMPLEMENTED");
     }
 
     public void setBgDrawable(Drawable bg) {
-//        Log.w(TAG, "setBgDrawable: NOT IMPLEMENTED");
+        if (itemHolder == null) return;
+        if (itemHolder.itemView == null) return;
+        itemHolder.itemView.setBackground(bg);
     }
 
 
     public boolean hasCustomBg() {
-        return false;
+        return customBg != null;
     }
 }

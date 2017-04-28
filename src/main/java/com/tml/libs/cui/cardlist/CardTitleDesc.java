@@ -16,7 +16,6 @@ public class CardTitleDesc extends CardListItemModel {
     private static final String TAG = "CardTitleDesc";
 
 
-    Drawable customBg = null;
     String title, desc;
     int textColor = 0xff000000;
     public String getTitle() {
@@ -71,7 +70,6 @@ public class CardTitleDesc extends CardListItemModel {
         if (viewBg != null)
             viewBg.setBackground(bg);
     }
-
 
     public void setTextColor(int textColor) {
         this.textColor = textColor;

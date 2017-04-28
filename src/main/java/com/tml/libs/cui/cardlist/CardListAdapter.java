@@ -158,10 +158,12 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 //        Log.d(TAG, "BIND: pos " + position + " model " + model.getID());
 
         if (isEnableCardCustomBackground() == false) {
+            Drawable bg = getVisualStyleDrawable(model.bgNormalVSName);
             if (model.equals(selectedModel))
-                model.setBgDrawable(getVisualStyleDrawable(model.bgSelectedVSName));
-            else
-                model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
+                bg = getVisualStyleDrawable(model.bgSelectedVSName);
+
+            if (bg != null)
+                model.setBgDrawable(bg);
         }
         else {
             if (model.hasCustomBg() == false)
