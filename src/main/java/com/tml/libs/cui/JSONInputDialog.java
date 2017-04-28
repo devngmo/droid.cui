@@ -87,7 +87,15 @@ public class JSONInputDialog extends Dialog {
         return obj;
     }
 
+    public static JSONObject createTextField(String fieldName) {
+        return createTextField(fieldName, fieldName, "");
+    }
+
     public static JSONObject createTextField(String fieldName, String value) {
+        return createTextField(fieldName, fieldName, value);
+    }
+
+    public static JSONObject createTextField(String fieldName, String fieldCaption, String value) {
         JSONObject f= null;
         try {
             f = new JSONObject();
