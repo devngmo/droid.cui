@@ -36,4 +36,8 @@ public class CardListItemModel extends LoggableClass {
     public boolean hasCustomBg() {
         return customBg != null;
     }
+
+    public void showCustomBg() {
+        setBgDrawable(customBg);
+    }
 }

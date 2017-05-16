@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.Adapter<CardListAdapter.CardItemHolder> {
 
+    public boolean showSelection = false;
     Map<String, CardChildViewClickListener> cardChildViewListenerMap = new HashMap<>();
     public CardChildViewClickListener getChildClickListener(String key) {
         return cardChildViewListenerMap.get(key);
@@ -78,7 +79,8 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         selectedModel = clickModel;
         selectedCardID = selectedModel.getID();
 
-        selectedModel.setBgDrawable(getVisualStyleDrawable(selectedModel.bgSelectedVSName));
+        Drawable bg = getVisualStyleDrawable(selectedModel.bgSelectedVSName);
+        selectedModel.setBgDrawable(bg);
         Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
 
 
@@ -167,7 +169,8 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         }
         else {
             if (model.hasCustomBg() == false)
-                model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
+                model.showCustomBg();
+                //model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
