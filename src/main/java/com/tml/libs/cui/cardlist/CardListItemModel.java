@@ -2,6 +2,7 @@ package com.tml.libs.cui.cardlist;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 
 import com.tml.libs.cutils.LoggableClass;
 
@@ -17,13 +18,15 @@ public class CardListItemModel extends LoggableClass {
     public String bgSelectedVSName = VSNAME_SELECTED;
     CardListAdapter.CardItemHolder itemHolder;
 
-    Drawable customBg = null;
+    protected Drawable customBg = null;
     public String getID() {
         return null;
     }
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         itemHolder = cardItemHolder;
+        if (hasCustomBg())
+            showCustomBg();
     }
 
     public void setBgDrawable(Drawable bg) {

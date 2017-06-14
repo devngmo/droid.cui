@@ -118,6 +118,12 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
     int mLayoutID;
     CardListModelProvider<T> provider;
+
+    public void setProvider(CardListModelProvider<T> provider) {
+        this.provider = provider;
+        notifyDataSetChanged();
+    }
+
     public CardListAdapter(int layoutID, CardListModelProvider<T> listProvider, CardClickListener cardListener) {
         super();
         mLayoutID = layoutID;
