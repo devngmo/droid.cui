@@ -49,12 +49,14 @@ public class CardTitleDesc extends CardListItemModel {
     View viewBg;
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         viewBg = cardItemHolder.itemView;
+
         txtTitle = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_title));
         txtTitle.setText(getTitle());
+        txtTitle.setTextColor(this.textColor);
         txtDesc = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_desc));
         txtDesc.setText(getDesc());
-
-        D("onBindView " + position + " title " + getTitle() + " desc " + desc);
+        txtDesc.setTextColor(this.textColor);
+        //D("onBindView " + position + " title " + getTitle() + " desc " + desc);
 
         if (customBg != null)
             viewBg.setBackground(customBg);
