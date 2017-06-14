@@ -56,37 +56,52 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     public void selectItemAt(int position) {
         lastSelectedCardPosition = position;
 
-        if (selectedModel != null)
-            selectedModel.setBgDrawable(getVisualStyleDrawable( selectedModel.bgNormalVSName ));
+        if (selectedModel != null) {
+            if (showSelection) {
+                // back to normal card
+                selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            }
+            selectedModel.onDeselect();
+        }
 
-        selectedModel = null;
+        selectedModel = getCardAt(position);
+        if (selectedModel != null)
+        {
+            if (showSelection)
+                selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
+            selectedModel.onSelect();
+        }
+
         notifyDataSetChanged();
+
 
         if (mCardClickListener != null)
             mCardClickListener.onClickCard(position);
     }
+
     public void selectItemAt(int position, CardItemHolder<T> holder) {
         T clickModel = holder.cardModel;
         if (clickModel.equals( selectedModel) == false) {
             if (selectedModel != null) {
-                selectedModel.setBgDrawable(getVisualStyleDrawable(selectedModel.bgNormalVSName));
-                Log.d(TAG, "onBindViewHolder: Deselect card " + lastSelectedCardPosition );
+                if (showSelection) {
+                    selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+                }
+                selectedModel.onDeselect();
+
+                //Log.d(TAG, "onBindViewHolder: Deselect card " + lastSelectedCardPosition );
             }
         }
-
 
         lastSelectedCardPosition = position;
         selectedModel = clickModel;
         selectedCardID = selectedModel.getID();
-
-        Drawable bg = getVisualStyleDrawable(selectedModel.bgSelectedVSName);
-        selectedModel.setBgDrawable(bg);
-        Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
-
+        if (showSelection)
+            selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
+        selectedModel.onSelect();
+        //Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
 
         if (mCardClickListener != null)
             mCardClickListener.onClickCard(position);
-
     }
 
     public interface CardListModelProvider<T> {
@@ -122,7 +137,7 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     @Override
     public void onBindViewHolder(final CardListAdapter.CardItemHolder holder, final int position) {
 
-        Log.d(TAG, "onBindViewHolder: pos " + position);
+        //Log.d(TAG, "onBindViewHolder: pos " + position);
         if (provider.getModel(position) == null)
         {
             Log.e(TAG, "onBindViewHolder: pos " + position + " card model is null" );
@@ -150,22 +165,22 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         holder.onBindModel(this, position, model);
 
 
-        if (model.equals(selectedModel))// != null && selectedModel.getID() != null &&   selectedModel.getID().equals(model.getID()))
-            Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
-        else
-            Log.d(TAG, "onBindViewHolder: card " + position );
+//        if (model.equals(selectedModel))// != null && selectedModel.getID() != null &&   selectedModel.getID().equals(model.getID()))
+//            Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
+//        else
+//            Log.d(TAG, "onBindViewHolder: card " + position );
 
 //        if (selectedModel != null)
 //            Log.d(TAG, "LAST SELECTION: pos " + lastSelectedCardPosition + " model " + selectedModel.getID());
 //        Log.d(TAG, "BIND: pos " + position + " model " + model.getID());
 
         if (isEnableCardCustomBackground() == false) {
-            Drawable bg = getVisualStyleDrawable(model.bgNormalVSName);
-            if (model.equals(selectedModel))
-                bg = getVisualStyleDrawable(model.bgSelectedVSName);
-
-            if (bg != null)
-                model.setBgDrawable(bg);
+//            Drawable bg = getVisualStyleDrawable(model.bgNormalVSName);
+//            if (model.equals(selectedModel))
+//                bg = getVisualStyleDrawable(model.bgSelectedVSName);
+//
+//            if (bg != null)
+//                model.setBgDrawable(bg);
         }
         else {
             if (model.hasCustomBg() == false)

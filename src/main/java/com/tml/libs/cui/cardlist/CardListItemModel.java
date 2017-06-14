@@ -40,4 +40,13 @@ public class CardListItemModel extends LoggableClass {
     public void showCustomBg() {
         setBgDrawable(customBg);
     }
+
+    public void onSelect() {
+        if (hasCustomBg())
+            setBgDrawable(customBg);
+    }
+
+    public void onDeselect() {
+
+    }
 }
