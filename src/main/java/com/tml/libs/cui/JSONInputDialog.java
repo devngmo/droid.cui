@@ -372,4 +372,75 @@ public class JSONInputDialog extends Dialog {
         );
 
     }
+
+    public static class Builder {
+        Context c;
+        JSONInputDialog dlg;
+        JSONObject setting  = new JSONObject();
+        JSONDialogListener listener;
+        JSONArray arFields = new JSONArray();
+        public void setListener(JSONDialogListener listener) {
+            this.listener = listener;
+        }
+
+        public void addTextField(String fieldName, String defaultValue) {
+            JSONObject fieldText = new JSONObject();
+            try {
+                fieldText.put("text", defaultValue);
+                fieldText.put("fieldType", "text");
+                fieldText.put("name", fieldName);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            arFields.put(fieldText);
+        }
+
+        public void addSpinner(String fieldName, String defaultValue, String[] values) {
+            JSONObject fieldText = new JSONObject();
+            try {
+                fieldText.put("text", defaultValue);
+                fieldText.put("fieldType", "spinner");
+                fieldText.put("name", fieldName);
+                JSONArray arValues = new JSONArray();
+                for (String v : values)
+                    arValues.put(v);
+                fieldText.put("values", arValues);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            arFields.put(fieldText);
+        }
+
+        public void addMultiselect(String groupName, String fieldName, String[] values) {
+            JSONObject fieldText = new JSONObject();
+            try {
+                fieldText.put("fieldType", "multiselect");
+                fieldText.put("name", fieldName);
+                JSONArray arValues = new JSONArray();
+                for (String v : values)
+                    arValues.put(v);
+                fieldText.put("values", arValues);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            arFields.put(fieldText);
+        }
+
+        public Builder(Context c) {
+            this.c = c;
+            try {
+                setting.put("title", "title");
+                setting.put("msg", "");
+                setting.put("fields", arFields);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        public JSONInputDialog create() {
+            dlg = new JSONInputDialog(c, setting, listener);
+            return dlg;
+        }
+    }
 }
