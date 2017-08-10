@@ -2,6 +2,7 @@ package com.tml.libs.cui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -9,6 +10,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.renderscript.Int4;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,6 +24,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.tml.libs.cui.cardlist.CardListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,6 +110,25 @@ public class JSONInputDialog extends Dialog {
             e.printStackTrace();
         }
         return f;
+    }
+
+    public static void showYesNoDialog(Context c, String title, String message) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setMessage(message).setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     public interface JSONDialogListener {
