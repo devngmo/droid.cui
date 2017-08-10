@@ -100,12 +100,16 @@ public class JSONInputDialog extends Dialog {
     }
 
     public static JSONObject createTextField(String fieldName, String fieldCaption, String value) {
+        return createTextField(fieldName, fieldCaption, value, 0);
+    }
+    public static JSONObject createTextField(String fieldName, String fieldCaption, String value, int flags) {
         JSONObject f= null;
         try {
             f = new JSONObject();
             f.put("fieldType", "text");
             f.put("name", fieldName);
             f.put("text", value);
+            f.put("flags", flags);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -302,6 +306,8 @@ public class JSONInputDialog extends Dialog {
         String fieldType = fieldData.getString("fieldType");
         if (fieldType.equals("text")) {
             EditText txt = new EditText(getContext());
+            if (fieldData.has("flags"))
+                txt.setInputType(fieldData.getInt("flags"));
             if (fieldData.has("text"))
                 txt.setText(fieldData.getString("text"));
             txt.setTag(fieldData);
