@@ -3,16 +3,19 @@ package com.tml.libs.cui.drawing;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.tml.libs.cutils.LoggableClass;
+
 /**
  * Created by TML on 16/02/2017.
  */
 
-public class PaintViewAdapter {
+public class PaintViewAdapter extends LoggableClass {
     protected int bgColor = 0xffffffff;
     protected PaintView pv;
 
     public PaintViewAdapter(PaintView v) {
         pv = v;
+        pv.setAdapter(this);
     }
 
     public PaintView getView() {
