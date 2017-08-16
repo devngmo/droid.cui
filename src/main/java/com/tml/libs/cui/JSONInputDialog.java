@@ -118,6 +118,16 @@ public class JSONInputDialog extends Dialog {
         return f;
     }
 
+    /**
+     * use json.getString("Options") to get list of selected indices. ex: 0,1,2
+     *
+     * @param ctx
+     * @param title
+     * @param options
+     * @param allowMultipleChoice
+     * @param listener
+     * @return
+     */
     public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options, boolean allowMultipleChoice, JSONDialogListener listener) {
         JSONObject obj = new JSONObject();
         try {
@@ -449,7 +459,7 @@ public class JSONInputDialog extends Dialog {
                 options.add((i+1) + ". " + arValues.getString(i));
             }
 
-            rva = new CardListAdapter<CardText>(R.layout.lvi_card_medium,
+            rva = new CardListAdapter<CardText>(R.layout.lvi_card_small,
                     new CardListAdapter.CardListModelProvider<CardText>() {
                 @Override
                 public int size() {
