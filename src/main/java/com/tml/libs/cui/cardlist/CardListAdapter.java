@@ -230,6 +230,10 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         T cardModel;
         CardListAdapter<T> adapter;
 
+        public T getCardModel() {
+            return cardModel;
+        }
+
         public CardItemHolder(View itemView) {
             super(itemView);
         }
