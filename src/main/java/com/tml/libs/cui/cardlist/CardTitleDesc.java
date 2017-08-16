@@ -15,9 +15,20 @@ import com.tml.libs.cutils.StaticLogger;
 public class CardTitleDesc extends CardListItemModel {
     private static final String TAG = "CardTitleDesc";
 
+    Object data = null;
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public Object getData() {
+        return data;
+    }
 
     String title, desc;
     int textColor = 0xff000000;
+    int descTextColor = 0xff000000;
+
     public String getTitle() {
         return title;
     }
@@ -47,6 +58,7 @@ public class CardTitleDesc extends CardListItemModel {
     TextView txtTitle;
     TextView txtDesc;
     View viewBg;
+
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         viewBg = cardItemHolder.itemView;
 
@@ -55,7 +67,7 @@ public class CardTitleDesc extends CardListItemModel {
         txtTitle.setTextColor(this.textColor);
         txtDesc = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_desc));
         txtDesc.setText(getDesc());
-        txtDesc.setTextColor(this.textColor);
+        txtDesc.setTextColor(this.descTextColor);
         //D("onBindView " + position + " title " + getTitle() + " desc " + desc);
 
         if (customBg != null)
@@ -77,6 +89,13 @@ public class CardTitleDesc extends CardListItemModel {
         this.textColor = textColor;
         if (viewBg != null) {
             ((TextView)viewBg.findViewById(R.id.text1)).setTextColor(textColor);
+        }
+    }
+
+    public void setDescTextColor(int color) {
+        descTextColor = color;
+        if (viewBg != null) {
+            txtDesc.setTextColor(descTextColor);
         }
     }
 }

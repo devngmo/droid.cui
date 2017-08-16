@@ -16,7 +16,7 @@ public class CardListItemModel extends LoggableClass {
     public static final String VSNAME_SELECTED = "selected";
     public String bgNormalVSName = VSNAME_NORMAL;
     public String bgSelectedVSName = VSNAME_SELECTED;
-    CardListAdapter.CardItemHolder itemHolder;
+    protected CardListAdapter.CardItemHolder itemHolder;
 
     protected Drawable customBg = null;
     public String getID() {
