@@ -19,11 +19,19 @@ public class CardListItemModel extends LoggableClass {
     protected CardListAdapter.CardItemHolder itemHolder;
 
     protected Drawable customBg = null;
+
     public String getID() {
-        return null;
+        return "" + position;
+    }
+    int position;
+
+    public int getPosition() {
+        return position;
     }
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
+        this.position = position;
+
         itemHolder = cardItemHolder;
         if (hasCustomBg())
             showCustomBg();
@@ -32,6 +40,8 @@ public class CardListItemModel extends LoggableClass {
     public void setBgDrawable(Drawable bg) {
         if (itemHolder == null) return;
         if (itemHolder.itemView == null) return;
+
+        D("setBgDrawable " + getID());
         itemHolder.itemView.setBackground(bg);
     }
 

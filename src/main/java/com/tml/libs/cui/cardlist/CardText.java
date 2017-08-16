@@ -52,7 +52,6 @@ public class CardText extends CardListItemModel {
     }
 
     public void setBgDrawable(Drawable bg) {
-        customBg = bg;
         if (viewBg != null)
             viewBg.setBackground(bg);
     }

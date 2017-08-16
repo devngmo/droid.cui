@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
@@ -11,21 +13,14 @@
     android:paddingTop="10dp">
 
     <TextView
-        android:id="@+id/card_title"
+        android:id="@+id/text1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Title"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:minHeight="80dp"
+        android:paddingLeft="4dp"
+        android:text="Card Item"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="#000000"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/card_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="#000000"
-        android:textStyle="italic" />
+        android:textColor="#000000" />
 
 </LinearLayout>

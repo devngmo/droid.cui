@@ -2,7 +2,6 @@ package com.tml.libs.cui;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -10,28 +9,35 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.renderscript.Int4;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tml.libs.cui.cardlist.CardListAdapter;
+import com.tml.libs.cui.cardlist.CardListItemModel;
+import com.tml.libs.cui.cardlist.CardText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,39 +106,43 @@ public class JSONInputDialog extends Dialog {
     }
 
     public static JSONObject createTextField(String fieldName, String fieldCaption, String value) {
-        return createTextField(fieldName, fieldCaption, value, 0);
-    }
-    public static JSONObject createTextField(String fieldName, String fieldCaption, String value, int flags) {
         JSONObject f= null;
         try {
             f = new JSONObject();
             f.put("fieldType", "text");
             f.put("name", fieldName);
             f.put("text", value);
-            f.put("flags", flags);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return f;
     }
 
-    public static void showYesNoDialog(Context c, String title, String message) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        break;
+    public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options, boolean allowMultipleChoice, JSONDialogListener listener) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("title", title);
+            obj.put("msg", "");
+            JSONArray fields = new JSONArray();
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
+            JSONObject fieldOptionsList = new JSONObject();
+            fieldOptionsList.put("fieldType", "option.list");
+            fieldOptionsList.put("name", "Options");
+            fieldOptionsList.put("label", "");
+            fieldOptionsList.put("hide.label", true);
+            fieldOptionsList.put("multiple", allowMultipleChoice);
+            JSONArray arOptions = new JSONArray();
+            for (String opt : options)
+                arOptions.put(opt);
+            fieldOptionsList.put("values", arOptions);
+            fields.put(fieldOptionsList);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setMessage(message).setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+            obj.put("fields", fields);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONInputDialog dlg = new JSONInputDialog(ctx, obj, listener);
+        return dlg;
     }
 
     public interface JSONDialogListener {
@@ -234,6 +244,14 @@ public class JSONInputDialog extends Dialog {
                 output.put(fieldData.getString("name"), "");
 
                 TextView txt = addTextView(fieldData.getString("name"));
+                if (fieldData.has("label"))
+                    txt.setText(fieldData.getString("label"));
+
+                if (fieldData.has("hide.label")) {
+                    if (fieldData.getBoolean("hide.label"))
+                        txt.setVisibility(View.GONE);
+                }
+
                 txt.setPadding(2, 20, 2, 2);
                 View v = createViewByField(fieldData);
 
@@ -256,6 +274,9 @@ public class JSONInputDialog extends Dialog {
         return v;
     }
 
+    Map<String, List<String>> listSelectionMap = new HashMap<>();
+
+
     void updateJSONOutput()  {
         try {
 //            for (int i = 0; i < pnlContent.getChildCount(); i++) {
@@ -265,7 +286,17 @@ public class JSONInputDialog extends Dialog {
                  ) {
                 String fieldType = fieldData.getString("fieldType");
                 View view = fieldViewMap.get(fieldData);
-                if (fieldType.equals("text")) {
+
+                if (fieldType.equals("option.list")) {
+                    String selectedIDs = "";
+                    for (String id : listSelectionMap.get(fieldData.getString("name"))) {
+                        if (selectedIDs.length() > 0)
+                            selectedIDs += ",";
+                        selectedIDs += id;
+                    }
+                    output.put(fieldData.getString("name"), selectedIDs);
+                }
+                else if (fieldType.equals("text")) {
                     output.put(fieldData.getString("name"), ((EditText)view).getText().toString().trim());
                 }
                 else if (fieldType.equals("spinner")) {
@@ -306,8 +337,6 @@ public class JSONInputDialog extends Dialog {
         String fieldType = fieldData.getString("fieldType");
         if (fieldType.equals("text")) {
             EditText txt = new EditText(getContext());
-            if (fieldData.has("flags"))
-                txt.setInputType(fieldData.getInt("flags"));
             if (fieldData.has("text"))
                 txt.setText(fieldData.getString("text"));
             txt.setTag(fieldData);
@@ -334,6 +363,27 @@ public class JSONInputDialog extends Dialog {
             ArrayAdapter<String> aa = createSpinnerAdapter(fieldData);
             spinner.setAdapter(aa);
             return spinner;
+        }
+        else if (fieldType.equals("option.list")) {
+            RecyclerView rv = new RecyclerView(getContext());
+            rv.setLayoutManager(new LinearLayoutManager(getContext()));
+            rv.setAdapter(createOptionListAdapter(fieldData));
+            return rv;
+//            ListView lv = new ListView(getContext());
+//            ArrayAdapter<String> aa = createListViewAdapter(fieldData);
+//            lv.setAdapter(aa);
+//            lv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//
+//                }
+//            });
+//            return lv;
         }
         else if (fieldType.equals("checkbox")) {
             CheckBox cbo = new CheckBox(getContext());
@@ -381,6 +431,68 @@ public class JSONInputDialog extends Dialog {
         return null;
     }
 
+
+
+    private RecyclerView.Adapter createOptionListAdapter(final JSONObject fieldData) {
+
+        CardListAdapter<CardText> rva = null;
+        try {
+            final List<String> options = new ArrayList<>();
+            final String fieldName = fieldData.getString("name");
+            final boolean multiSelect = fieldData.getBoolean("multiple");
+            JSONArray arValues = null;
+
+
+            listSelectionMap.put(fieldName, new ArrayList<String>());
+            arValues = fieldData.getJSONArray("values");
+            for (int i = 0; i < arValues.length(); i++) {
+                options.add((i+1) + ". " + arValues.getString(i));
+            }
+
+            rva = new CardListAdapter<CardText>(R.layout.lvi_card_medium,
+                    new CardListAdapter.CardListModelProvider<CardText>() {
+                @Override
+                public int size() {
+                    return options.size();
+                }
+
+                @Override
+                public CardText getModel(int position) {
+                    CardText card = new CardText("", options.get(position));
+                    return card;
+                }
+            }, new CardListAdapter.CardClickListener() {
+                @Override
+                public void onClickCard(int index) {
+                    List<String> ls = listSelectionMap.get(fieldName);
+                    if (multiSelect) {
+                        if (ls.contains("" + index))
+                            ls.remove("" + index);
+                        else
+                            ls.add("" + index);
+                    }
+                    else {
+                        ls.clear();
+                        ls.add("" + index);
+
+                    }
+                }
+                @Override
+                public boolean onLongClickCard(int index) {
+                    return false;
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        rva.showSelection = true;
+        rva.setVisualStyle(CardListItemModel.VSNAME_NORMAL, getContext().getResources().getDrawable(R.drawable.card_round_box_normal));
+        rva.setVisualStyle(CardListItemModel.VSNAME_SELECTED, getContext().getResources().getDrawable(R.drawable.card_light_blue));
+        return rva;
+    }
+
     private int[] hexl2il(String[] items) {
         int[] ivals = new int[items.length];
         for (int i = 0; i < items.length; i++) {
@@ -402,74 +514,16 @@ public class JSONInputDialog extends Dialog {
 
     }
 
-    public static class Builder {
-        Context c;
-        JSONInputDialog dlg;
-        JSONObject setting  = new JSONObject();
-        JSONDialogListener listener;
-        JSONArray arFields = new JSONArray();
-        public void setListener(JSONDialogListener listener) {
-            this.listener = listener;
+    private ArrayAdapter<String> createListViewAdapter(JSONObject fieldData) throws JSONException {
+        JSONArray arValues = fieldData.getJSONArray("values");
+        String[] items = new String[arValues.length()];
+        for (int i = 0; i < arValues.length(); i++) {
+            items[i] = (i + 1) + ". " + arValues.getString(i);
         }
+        return new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_list_item_1,
+                items
+        );
 
-        public void addTextField(String fieldName, String defaultValue) {
-            JSONObject fieldText = new JSONObject();
-            try {
-                fieldText.put("text", defaultValue);
-                fieldText.put("fieldType", "text");
-                fieldText.put("name", fieldName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            arFields.put(fieldText);
-        }
-
-        public void addSpinner(String fieldName, String defaultValue, String[] values) {
-            JSONObject fieldText = new JSONObject();
-            try {
-                fieldText.put("text", defaultValue);
-                fieldText.put("fieldType", "spinner");
-                fieldText.put("name", fieldName);
-                JSONArray arValues = new JSONArray();
-                for (String v : values)
-                    arValues.put(v);
-                fieldText.put("values", arValues);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            arFields.put(fieldText);
-        }
-
-        public void addMultiselect(String groupName, String fieldName, String[] values) {
-            JSONObject fieldText = new JSONObject();
-            try {
-                fieldText.put("fieldType", "multiselect");
-                fieldText.put("name", fieldName);
-                JSONArray arValues = new JSONArray();
-                for (String v : values)
-                    arValues.put(v);
-                fieldText.put("values", arValues);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            arFields.put(fieldText);
-        }
-
-        public Builder(Context c) {
-            this.c = c;
-            try {
-                setting.put("title", "title");
-                setting.put("msg", "");
-                setting.put("fields", arFields);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        public JSONInputDialog create() {
-            dlg = new JSONInputDialog(c, setting, listener);
-            return dlg;
-        }
     }
 }
