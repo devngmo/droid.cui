@@ -2,6 +2,7 @@ package com.tml.libs.cui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -9,6 +10,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.renderscript.Int4;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -153,6 +155,15 @@ public class JSONInputDialog extends Dialog {
         }
         JSONInputDialog dlg = new JSONInputDialog(ctx, obj, listener);
         return dlg;
+    }
+
+    public static void createMessageBoxOK(Context c, String title, String msg, OnClickListener okListener) {
+        AlertDialog.Builder b = new AlertDialog.Builder(c);
+        b.setTitle(title);
+        b.setCancelable(false);
+        b.setMessage(msg);
+        b.setPositiveButton("OK", okListener);
+        b.create().show();
     }
 
     public interface JSONDialogListener {
