@@ -510,7 +510,7 @@ public class JSONInputDialog extends Dialog {
 
         rva.showSelection = true;
         rva.setVisualStyle(CardListItemModel.VSNAME_NORMAL, getContext().getResources().getDrawable(R.drawable.card_round_box_normal));
-        rva.setVisualStyle(CardListItemModel.VSNAME_SELECTED, getContext().getResources().getDrawable(R.drawable.card_light_blue));
+        rva.setVisualStyle(CardListItemModel.VSNAME_SELECTED, getContext().getResources().getDrawable(R.drawable.card_yellow));
         return rva;
     }
 
