@@ -73,6 +73,31 @@ public class JSONInputDialog extends Dialog {
         return dlg;
     }
 
+    public static JSONInputDialog createManyTextInputDialog(Context c, String title, String message,
+            String[] fieldNames,
+            String[] fieldValues,
+            JSONDialogListener listener) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("title", title);
+            obj.put("msg", message);
+            JSONArray fields = new JSONArray();
+            for (int i = 0; i < fieldNames.length; i++) {
+                JSONObject fieldText = new JSONObject();
+                fieldText.put("fieldType", "text");
+                fieldText.put("name", fieldNames[i]);
+                fieldText.put("text", fieldValues[i]);
+                fields.put(fieldText);
+            }
+            obj.put("fields", fields);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONInputDialog dlg = new JSONInputDialog(c, obj, listener);
+        return dlg;
+    }
+
     public static JSONObject createParamsUserPass(String title, String message) {
         JSONObject obj= new JSONObject();
         try {
