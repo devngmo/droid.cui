@@ -39,4 +39,5 @@ public class PaintViewAdapter extends LoggableClass {
     }
 
 
+
 }
