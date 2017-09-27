@@ -182,13 +182,21 @@ public class JSONInputDialog extends Dialog {
         return dlg;
     }
 
-    public static void createMessageBoxOK(Context c, String title, String msg, OnClickListener okListener) {
+    public static AlertDialog createMessageBoxOK(Context c, String title, String msg, OnClickListener okListener) {
         AlertDialog.Builder b = new AlertDialog.Builder(c);
         b.setTitle(title);
         b.setCancelable(false);
         b.setMessage(msg);
         b.setPositiveButton("OK", okListener);
-        b.create().show();
+        return b.create();
+    }
+
+    public static AlertDialog createWaitDialogBox(Context c, String title, String msg) {
+        AlertDialog.Builder b = new AlertDialog.Builder(c);
+        b.setTitle(title);
+        b.setMessage(msg);
+        b.setCancelable(false);
+        return b.create();
     }
 
     public interface JSONDialogListener {
