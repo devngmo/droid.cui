@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +16,9 @@ import android.view.ViewGroup;
 import com.tml.libs.cui.R;
 
 public class FragmentCardList extends Fragment {
-
+    boolean showAsGrid = false;
+    int nCols = 1;
+    int spacing = 2;
     RecyclerView rvItems;
 
     RecyclerView.Adapter<CardListAdapter.CardItemHolder> rvItemsAdapter;
@@ -38,6 +42,16 @@ public class FragmentCardList extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    public static FragmentCardList newInstanceOfGrid(int nCols, int spacing, RecyclerView.Adapter<CardListAdapter.CardItemHolder> adapter) {
+        FragmentCardList fragment = new FragmentCardList();
+        fragment.rvItemsAdapter = adapter;
+        fragment.nCols = nCols;
+        fragment.spacing = spacing;
+        fragment.showAsGrid = true;
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +65,17 @@ public class FragmentCardList extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_card_list, container, false);
         rvItems = (RecyclerView)root.findViewById(R.id.frag_card_list_rv);
-        rvItems.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (showAsGrid) {
+            GridLayoutManager glm = new GridLayoutManager(getContext(), nCols);
+            rvItems.addItemDecoration(new GridSpacingItemDecoration(nCols, spacing, true));
+//            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvItems.getContext(),
+//                    glm.getOrientation());
+//            rvItems.addItemDecoration(dividerItemDecoration);
+            rvItems.setLayoutManager(glm);
+        }
+        else
+            rvItems.setLayoutManager(new LinearLayoutManager(getContext()));
         rvItems.setAdapter(rvItemsAdapter);
         return root;
     }
