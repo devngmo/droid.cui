@@ -1,6 +1,7 @@
 package com.tml.libs.cui.drawing;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
@@ -17,13 +18,17 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
     protected ScaleGestureDetector scaleGestureDetector;
     protected Point camWorldCenter = null;
     protected Paint pGridLine;
+    protected Paint pGridAxis;
     protected Paint pGridRulerText;
 
     protected int scrW = 0;
     protected int scrH = 0;
 
+    protected boolean showAxis = false;
+
     protected boolean isZooming = false;
     protected float zoomRatio = 1;
+    private boolean isMoveCamera = true;
 
     public int getGridTileSize() { return 50; }
     public int getGridFontSize() { return 20; }
@@ -77,18 +82,30 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         pGridLine.setStyle(Paint.Style.STROKE);
         pGridLine.setColor(0x66000000);
 
+        pGridAxis = new Paint();
+        pGridAxis.setStyle(Paint.Style.STROKE);
+        pGridAxis.setColor(0x88008800);
+
         pGridRulerText = new Paint();
         pGridRulerText.setStyle(Paint.Style.STROKE);
         pGridRulerText.setColor(0x66000000);
         pGridRulerText.setTextSize(getGridFontSize());
     }
 
+    protected boolean drawDebug = false;
 
     @Override
     public void onDraw(Canvas c) {
         super.onDraw(c);
         calcScreenParams(c);
         drawGrid(c);
+
+        if (drawDebug) {
+            Paint p = new Paint();
+            p.setColor(Color.BLUE);
+            p.setTextSize(40);
+            c.drawText("Zoom " + zoomRatio , 10, 50, p);
+        }
     }
 
     protected int vpLeft;
@@ -101,12 +118,22 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         if (camWorldCenter == null)
             camWorldCenter = new Point(scrW/2, scrH/2);
 
-        vpLeft = camWorldCenter.x - (int)(zoomRatio * scrW/2);
-        vpTop = camWorldCenter.y - (int)(zoomRatio * scrH/2);
+        // zoomed viewport
+        float zmW = scrW / zoomRatio;
+        float zmH = scrH / zoomRatio;
+        vpLeft = camWorldCenter.x - (int)(zmW/2);
+        vpTop = camWorldCenter.y - (int)(zmH/2);
     }
 
     private void drawGrid(Canvas c) {
         pGridRulerText.setTextAlign(Paint.Align.RIGHT);
+
+        if (showAxis) {
+            float axisXScreen = w2sX(0);
+            float axisYScreen = w2sY(0);
+            c.drawLine(0, axisYScreen, scrW, axisYScreen, pGridAxis);
+            c.drawLine(axisXScreen, 0, axisXScreen, scrH, pGridAxis);
+        }
 
         for (int r = 0; r <= getGridRows(); r++) {
             c.drawLine(w2sX(0), w2sY(r * getGridTileSize()),
@@ -122,11 +149,11 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
     }
 
     private float w2sX(int x) {
-        return (x - vpLeft) / zoomRatio;
+        return (x - vpLeft) * zoomRatio;
     }
 
     private float w2sY(int y) {
-        return (y - vpTop) / zoomRatio;
+        return (y - vpTop) * zoomRatio;
     }
 
     protected int downX = 0;
@@ -148,14 +175,20 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
                 downY = curY;
                 oldCamX = camWorldCenter.x;
                 oldCamY = camWorldCenter.y;
+
+                notifyOnTouchDown();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 if (isZooming) return false;
                 int dx = curX - downX;
                 int dy = curY - downY;
-                camWorldCenter.x = (int)MathUtils.clamp(  oldCamX - zoomRatio *(dx), 0, getWorldWidth());
-                camWorldCenter.y = (int)MathUtils.clamp(  oldCamY - zoomRatio *(dy), 0, getWorldHeight());
+
+                boolean handled = handleOnTouchMove(dx, dy);
+                if (!handled) {
+                    camWorldCenter.x = (int) MathUtils.clamp(oldCamX - (dx / zoomRatio), 0, getWorldWidth());
+                    camWorldCenter.y = (int) MathUtils.clamp(oldCamY - (dy / zoomRatio), 0, getWorldHeight());
+                }
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
@@ -165,6 +198,14 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         requestRender();
         return true;
 
+    }
+
+    protected void notifyOnTouchDown() {
+
+    }
+
+    protected boolean handleOnTouchMove(int dx, int dy) {
+        return false;
     }
 
     private void requestRender() {

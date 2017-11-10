@@ -18,6 +18,14 @@ public class CardListItemModel extends LoggableClass {
     public String bgSelectedVSName = VSNAME_SELECTED;
     protected CardListAdapter.CardItemHolder itemHolder;
 
+    Object data = null;
+    public void setData(Object data) {
+        this.data = data;
+    }
+    public Object getData() {
+        return data;
+    }
+
     protected Drawable customBg = null;
 
     public String getID() {
