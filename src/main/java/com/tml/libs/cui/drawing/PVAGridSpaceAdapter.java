@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
@@ -16,6 +17,7 @@ import com.tml.libs.cutils.StaticLogger;
 
 public class PVAGridSpaceAdapter extends PaintViewAdapter {
     protected ScaleGestureDetector scaleGestureDetector;
+    GestureDetector gestureDetector;
     protected Point camWorldCenter = null;
     protected Paint pGridLine;
     protected Paint pGridAxis;
@@ -77,7 +79,37 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
 
             }
         });
+        gestureDetector = new GestureDetector(v.getContext(), new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
 
+            @Override
+            public void onShowPress(MotionEvent e) {
+                handleGestureOnShowPress(e);
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return handleGestureOnSingleTapUp(e);
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                handleGestureOnLongPress(e);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                return false;
+            }
+        });
         StaticLogger.enableLog(this);
         bgColor = 0xffffffff;
 
@@ -93,6 +125,18 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         pGridRulerText.setStyle(Paint.Style.STROKE);
         pGridRulerText.setColor(0x66000000);
         pGridRulerText.setTextSize(getGridFontSize());
+    }
+
+    public void handleGestureOnShowPress(MotionEvent e) {
+
+    }
+
+    public void handleGestureOnLongPress(MotionEvent e) {
+
+    }
+
+    public boolean handleGestureOnSingleTapUp(MotionEvent e) {
+        return false;
     }
 
     protected boolean drawDebug = false;
@@ -171,6 +215,7 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         curY = (int)e.getY();
 
         scaleGestureDetector.onTouchEvent(e);
+        gestureDetector.onTouchEvent(e);
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -199,6 +244,8 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
                     isZooming = false;
         }
         requestRender();
+
+
         return true;
 
     }
