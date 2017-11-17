@@ -54,12 +54,15 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
 
     public PVAGridSpaceAdapter(PaintView v) {
         super(v);
+        allowZooming = true;
         scaleGestureDetector = new ScaleGestureDetector(v.getContext(), new ScaleGestureDetector.OnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                zoomRatio = MathUtils.clamp(zoomRatio * detector.getScaleFactor(), 0.1f, 5f);
-                //D("zoom ratio " + zoomRatio);
-                pv.invalidate();
+                if (allowZooming) {
+                    zoomRatio = MathUtils.clamp(zoomRatio * detector.getScaleFactor(), 0.1f, 5f);
+                    //D("zoom ratio " + zoomRatio);
+                    pv.invalidate();
+                }
                 return true;
             }
 

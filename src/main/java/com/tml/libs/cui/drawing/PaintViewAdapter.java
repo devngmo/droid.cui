@@ -13,6 +13,16 @@ public class PaintViewAdapter extends LoggableClass {
     protected int bgColor = 0xffffffff;
     protected PaintView pv;
 
+    protected boolean allowZooming = false;
+
+    public void setAllowZooming(boolean allowZooming) {
+        this.allowZooming = allowZooming;
+    }
+
+    public boolean isAllowZooming() {
+        return allowZooming;
+    }
+
     public PaintViewAdapter(PaintView v) {
         pv = v;
         pv.setAdapter(this);
