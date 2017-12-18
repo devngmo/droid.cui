@@ -2,9 +2,9 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -16,7 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-   
+
+    productFlavors {
+    }
 }
 
 dependencies {
