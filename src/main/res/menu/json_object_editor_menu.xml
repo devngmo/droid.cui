@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="JSONObjectEditorActivity">
+    <item
+        android:id="@+id/action_add_value"
+        android:orderInCategory="100"
+        android:title="+ Value"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_object"
+        android:orderInCategory="101"
+        android:title="+ Object"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_add_array"
+        android:orderInCategory="102"
+        android:title="+ Array"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="103"
+        android:title="Save"
+        app:showAsAction="ifRoom" />
+</menu>

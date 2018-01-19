@@ -1,12 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tml.libs.cui">
 
-    <!--<application-->
-        <!--android:allowBackup="true"-->
-        <!--android:supportsRtl="true"-->
-        <!--android:theme="@style/AppTheme"-->
-        <!--&gt;-->
-
-    <!--</application>-->
+    <!-- <application -->
+    <!-- android:allowBackup="true" -->
+    <!-- android:supportsRtl="true" -->
+    <!-- android:theme="@style/AppTheme" -->
+    <!-- &gt; -->
+    <!-- </application> -->
+    <application>
+        <activity android:name=".activities.JSONObjectEditorActivity" />
+    </application>
 
 </manifest>
