@@ -2,6 +2,8 @@ package com.tml.libs.cui;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by TML on 18/01/2018.
  */
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 public class JSONEditorDocument {
     JSONObject data;
     JSONObject schema = null;
+
 
     public JSONObject getData() {
         return data;
