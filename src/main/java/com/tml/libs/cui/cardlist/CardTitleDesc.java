@@ -1,6 +1,7 @@
 package com.tml.libs.cui.cardlist;
 
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,8 +15,8 @@ import com.tml.libs.cutils.StaticLogger;
 
 public class CardTitleDesc extends CardListItemModel {
     private static final String TAG = "CardTitleDesc";
-
     Object data = null;
+    public boolean showDescAsHTML = false;
 
     public void setData(Object data) {
         this.data = data;
@@ -28,6 +29,7 @@ public class CardTitleDesc extends CardListItemModel {
     String title, desc;
     int textColor = 0xff000000;
     int descTextColor = 0xff000000;
+
 
     public String getTitle() {
         return title;
@@ -51,8 +53,12 @@ public class CardTitleDesc extends CardListItemModel {
 
     public void setDesc(String desc) {
         this.desc = desc;
-        if (txtDesc != null)
-            txtDesc.setText(desc);
+        if (txtDesc != null) {
+            if (showDescAsHTML)
+                txtDesc.setText(Html.fromHtml(desc));
+            else
+                txtDesc.setText(desc);
+        }
     }
 
     TextView txtTitle;
@@ -66,7 +72,10 @@ public class CardTitleDesc extends CardListItemModel {
         txtTitle.setText(getTitle());
         txtTitle.setTextColor(this.textColor);
         txtDesc = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_desc));
-        txtDesc.setText(getDesc());
+        if (showDescAsHTML)
+            txtDesc.setText(Html.fromHtml(desc));
+        else
+            txtDesc.setText(desc);
         txtDesc.setTextColor(this.descTextColor);
         //D("onBindView " + position + " title " + getTitle() + " desc " + desc);
 

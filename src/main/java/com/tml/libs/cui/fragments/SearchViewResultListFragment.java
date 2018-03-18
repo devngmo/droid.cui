@@ -38,7 +38,6 @@ public class SearchViewResultListFragment extends Fragment {
      *
      * @return A new instance of fragment SearchViewResultListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SearchViewResultListFragment newInstance(String tag, CardListAdapter.CardListModelProvider<CardTitleDesc> mp) {
         SearchViewResultListFragment fragment = new SearchViewResultListFragment();
         fragment.mp = mp;
@@ -102,7 +101,6 @@ public class SearchViewResultListFragment extends Fragment {
         return rvA;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);
