@@ -54,4 +54,43 @@ public class GoogleMapHelper {
 
         return b;
     }
+
+    public static float AngleToRadian(float a) {
+        return (float) (a * Math.PI / 180.0f);
+    }
+
+    /**
+     * Calculate distance between 2 place in EARTH MAP
+     *
+     * @param latA
+     * @param longA
+     * @param latB
+     * @param longB
+     * @return
+     */
+    public static float CalcDistance(float latA, float longA,
+                                     float latB, float longB) {
+        float radA = AngleToRadian(latA);
+        float radB = AngleToRadian(latB);
+        float dLat = AngleToRadian(latB - latA);
+        float dLong = AngleToRadian(longB - longA);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(radA) * Math.cos(radB) *
+                        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        float distance = (float) (EARTH_RADIUS * c);
+        return distance;
+    }
+
+    public static float[] limitDistance(float latA, float longA,
+                                        float latB, float longB, float maxDistance) {
+        float latB2 = latB;
+        float lngB2 = longB;
+
+        float d = CalcDistance(latA, longA, latB, longB);
+        if (d > maxDistance) {
+
+        }
+        return new float[] {latB2, lngB2};
+    }
 }
