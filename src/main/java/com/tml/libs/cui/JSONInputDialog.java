@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -248,6 +249,7 @@ public class JSONInputDialog extends Dialog {
     Map<JSONObject, View> fieldViewMap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dlg_fragment_okcancel);
         txtMsg = (TextView) findViewById(R.id.txt_message);
