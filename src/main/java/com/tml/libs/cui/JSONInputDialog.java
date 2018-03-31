@@ -34,6 +34,7 @@ import com.tml.libs.cui.cardlist.CardListAdapter;
 import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -197,6 +198,16 @@ public class JSONInputDialog extends Dialog {
         b.setTitle(title);
         b.setMessage(msg);
         b.setCancelable(false);
+        return b.create();
+    }
+
+    public static AlertDialog createMessageBoxYesNo(@NotNull Context context, String title, String msg, OnClickListener okListener, OnClickListener cancelListener) {
+        AlertDialog.Builder b = new AlertDialog.Builder(context);
+        b.setTitle(title);
+        b.setCancelable(false);
+        b.setMessage(msg);
+        b.setPositiveButton("OK", okListener);
+        b.setNegativeButton("Cancel", cancelListener);
         return b.create();
     }
 

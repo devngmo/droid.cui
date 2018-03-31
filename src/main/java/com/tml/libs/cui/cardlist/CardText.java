@@ -1,6 +1,7 @@
 package com.tml.libs.cui.cardlist;
 
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class CardText extends CardListItemModel {
     Drawable customBg = null;
     String id, text;
     int textColor = 0xff000000;
+    public boolean textAsHtml = false;
     public String getID() {
         return id;
     }
@@ -35,11 +37,14 @@ public class CardText extends CardListItemModel {
         this.text = text;
     }
 
-    View viewBg;
+    View viewBg = null;
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
         viewBg = cardItemHolder.itemView;
         TextView txt = ((TextView)cardItemHolder.itemView.findViewById(R.id.text1));
-        txt.setText(getText());
+        if (textAsHtml)
+            txt.setText(Html.fromHtml(getText()));
+        else
+            txt.setText(getText());
         txt.setTextColor(textColor);
 
         if (customBg != null)
