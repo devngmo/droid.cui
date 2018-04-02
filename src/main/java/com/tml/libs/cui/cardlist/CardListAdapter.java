@@ -23,11 +23,8 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         return cardChildViewListenerMap.get(key);
     }
 
+    @Deprecated
     public void selectCardByID(String id) {
-        selectedCardID = id;
-        if (selectedModel != null)
-            selectedModel.setBgDrawable(getVisualStyleDrawable( selectedModel.bgNormalVSName ));
-        lastSelectedCardPosition = -1;
     }
 
     boolean enableCardCustomBackground = false;
@@ -44,74 +41,24 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     }
 
     Map<String, Drawable> visualStyles = new HashMap<>();
-
     private static final String TAG = "CardListAdapter";
 
-    int lastSelectedCardPosition = -1;
-    String selectedCardID = null;
-    T selectedModel = null;
+    int selectedIndex = -1;
 
     public T getCardAt(int index) {
         return provider.getModel(index);
     }
 
     public void selectItemAt(int position) {
-        lastSelectedCardPosition = position;
-
-        if (selectedModel != null) {
-            if (showSelection) {
-                // back to normal card
-                selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
-            }
-            selectedModel.onDeselect();
-        }
-
-        selectedModel = getCardAt(position);
-        if (selectedModel != null)
-        {
-            if (showSelection)
-                selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
-            selectedModel.onSelect();
-        }
-
+        selectedIndex = position;
         notifyDataSetChanged();
-
-
         if (mCardClickListener != null)
             mCardClickListener.onClickCard(position);
     }
 
     public void selectItemAt(int position, CardItemHolder<T> holder) {
-        T clickModel = holder.cardModel;
-
-        if (clickModel != selectedModel) {
-            if (selectedModel != null) {
-                if (showSelection) {
-                    StaticLogger.D(TAG,"CLEAR SEL...");
-                    selectedModel.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
-                }
-                selectedModel.onDeselect();
-
-                //Log.d(TAG, "onBindViewHolder: Deselect card " + lastSelectedCardPosition );
-            }
-        }
-        else {
-
-        }
-
-        lastSelectedCardPosition = position;
-        selectedModel = clickModel;
-        selectedCardID = selectedModel.getID();
-        if (showSelection) {
-            StaticLogger.D(TAG, "SEL " + position);
-            Drawable d = getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED);
-            if (d == null)
-                StaticLogger.E(TAG, "SEL " + position + " BG NULL");
-            selectedModel.setBgDrawable(d);
-        }
-        selectedModel.onSelect();
-        //Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
-
+        selectedIndex = position;
+        notifyDataSetChanged();
         if (mCardClickListener != null)
             mCardClickListener.onClickCard(position);
     }
@@ -154,7 +101,6 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
     @Override
     public void onBindViewHolder(final CardListAdapter.CardItemHolder holder, final int position) {
-
         //Log.d(TAG, "onBindViewHolder: pos " + position);
         if (provider.getModel(position) == null)
         {
@@ -164,60 +110,16 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
         T model = provider.getModel(position);
 
-        if (lastSelectedCardPosition == -1 && selectedCardID != null) {
-            if (model.getID().equals(selectedCardID))
-            {
-                selectedModel = model;
-                lastSelectedCardPosition = position;
-            }
-        }
-
-
-
-
         if (showSelection) {
-            if (lastSelectedCardPosition == position) {
-                if (selectedModel == null) {
-                    selectedModel = model;
-                    selectedCardID = model.getID();
-                }
+            if (selectedIndex == position)
                 model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
-            }
-            else {
+            else
                 model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
-            }
         }
         else {
-
             model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
         }
-
-
         holder.onBindModel(this, position, model);
-
-
-//        if (model.equals(selectedModel))// != null && selectedModel.getID() != null &&   selectedModel.getID().equals(model.getID()))
-//            Log.d(TAG, "onBindViewHolder: SELECTED card " + position );
-//        else
-//            Log.d(TAG, "onBindViewHolder: card " + position );
-
-//        if (selectedModel != null)
-//            Log.d(TAG, "LAST SELECTION: pos " + lastSelectedCardPosition + " model " + selectedModel.getID());
-//        Log.d(TAG, "BIND: pos " + position + " model " + model.getID());
-
-//        if (isEnableCardCustomBackground() == false) {
-//            Drawable bg = getVisualStyleDrawable(model.bgNormalVSName);
-//            if (model.equals(selectedModel))
-//                bg = getVisualStyleDrawable(model.bgSelectedVSName);
-//
-//            if (bg != null)
-//                model.setBgDrawable(bg);
-//        }
-//        else {
-            //if (model.hasCustomBg() == false)
-            //    model.showCustomBg();
-                //model.setBgDrawable(getVisualStyleDrawable(model.bgNormalVSName));
-        //}
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +131,6 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
             @Override
             public boolean onLongClick(View v) {
                 return mCardClickListener.onLongClickCard(position);
-
             }
         });
 
