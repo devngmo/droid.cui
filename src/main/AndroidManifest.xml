@@ -10,6 +10,7 @@
     <!-- </application> -->
     <application>
         <activity android:name=".activities.JSONObjectEditorActivity" />
+
     </application>
 
 </manifest>
