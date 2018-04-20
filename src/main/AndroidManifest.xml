@@ -10,6 +10,9 @@
     <!-- </application> -->
     <application>
         <activity android:name=".activities.JSONObjectEditorActivity" />
+        <activity android:name=".activities.ImageViewerActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
 
     </application>
 

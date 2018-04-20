@@ -1,6 +1,7 @@
 package com.tml.libs.cui;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
