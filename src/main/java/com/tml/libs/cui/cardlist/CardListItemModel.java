@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.tml.libs.cutils.LoggableClass;
+import com.tml.libs.cutils.StaticLogger;
 
 /**
  * Created by TML on 04/01/2017.
@@ -27,6 +28,10 @@ public class CardListItemModel extends LoggableClass {
     }
 
     protected Drawable customBg = null;
+    public void setCustomBg(Drawable bg) {
+        customBg = bg;
+        setBgDrawable(bg);
+    }
 
     public String getID() {
         return "" + position;
@@ -38,18 +43,16 @@ public class CardListItemModel extends LoggableClass {
     }
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
+        StaticLogger.D("CardListItemModel::onBindView " + position + " hasBg " + hasCustomBg());
         this.position = position;
-
         itemHolder = cardItemHolder;
-        if (hasCustomBg())
-            showCustomBg();
     }
 
     public void setBgDrawable(Drawable bg) {
         if (itemHolder == null) return;
         if (itemHolder.itemView == null) return;
 
-        D("setBgDrawable " + getID());
+        //StaticLogger.D("setBgDrawable " + getID());
         itemHolder.itemView.setBackground(bg);
     }
 

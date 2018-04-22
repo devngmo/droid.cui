@@ -71,7 +71,6 @@ public class CardImageTitle extends CardListItemModel {
     }
 
     public void setBgDrawable(Drawable bg) {
-        customBg = bg;
         if (viewBg != null)
             viewBg.setBackground(bg);
     }

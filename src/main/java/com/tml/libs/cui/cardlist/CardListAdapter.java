@@ -101,25 +101,40 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
     @Override
     public void onBindViewHolder(final CardListAdapter.CardItemHolder holder, final int position) {
-        //Log.d(TAG, "onBindViewHolder: pos " + position);
-        if (provider.getModel(position) == null)
+        //StaticLogger.D(TAG, "onBindViewHolder: pos " + position);
+        T model = provider.getModel(position);
+
+        if (model == null)
         {
-            Log.e(TAG, "onBindViewHolder: pos " + position + " card model is null" );
+            StaticLogger.E(TAG, "onBindViewHolder: pos " + position + " card model is null" );
             return;
         }
 
-        T model = provider.getModel(position);
+        holder.onBindModel(this, position, model);
 
         if (showSelection) {
             if (selectedIndex == position)
                 model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
-            else
-                model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            else {
+                if (model.hasCustomBg()) {
+                    //StaticLogger.D("showCustomBg " + position);
+                    model.showCustomBg();
+                }
+                else
+                    model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            }
         }
         else {
-            model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            if (model.hasCustomBg()) {
+                //StaticLogger.D("showCustomBg " + position);
+                model.showCustomBg();
+            }
+            else {
+                //StaticLogger.D("show normal bg " + position);
+                model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            }
         }
-        holder.onBindModel(this, position, model);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

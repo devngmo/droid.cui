@@ -66,6 +66,8 @@ public class CardTitleDesc extends CardListItemModel {
     View viewBg;
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
+        super.onBindView(position, cardItemHolder);
+        //StaticLogger.D("CardTitleDesc::onBindView " + position);
         viewBg = cardItemHolder.itemView;
 
         txtTitle = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_title));
@@ -78,20 +80,6 @@ public class CardTitleDesc extends CardListItemModel {
             txtDesc.setText(desc);
         txtDesc.setTextColor(this.descTextColor);
         //D("onBindView " + position + " title " + getTitle() + " desc " + desc);
-
-        if (customBg != null)
-            viewBg.setBackground(customBg);
-    }
-
-    @Override
-    public boolean hasCustomBg() {
-        return customBg != null;
-    }
-
-    public void setBgDrawable(Drawable bg) {
-        customBg = bg;
-        if (viewBg != null)
-            viewBg.setBackground(bg);
     }
 
     public void setTextColor(int textColor) {
