@@ -1,5 +1,6 @@
 package com.tml.libs.cui.cardlist;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,7 @@ import com.tml.libs.cutils.StaticLogger;
  * Created by TML on 04/01/2017.
  */
 
-public class CardListItemModel extends LoggableClass {
+public class CardListItemModel {
     private static final String TAG = "CardListItemModel";
     public static final String VSNAME_NORMAL = "normal";
     public static final String VSNAME_SELECTED = "selected";
@@ -72,5 +73,9 @@ public class CardListItemModel extends LoggableClass {
 
     public void onDeselect() {
 
+    }
+
+    protected Resources getResource() {
+        return itemHolder.itemView.getContext().getResources();
     }
 }
