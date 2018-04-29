@@ -8,7 +8,9 @@
     android:paddingBottom="10dp"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    android:elevation="2dp"
+    >
 
     <TextView
         android:id="@+id/card_title"
@@ -23,8 +25,9 @@
         android:id="@+id/card_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
         android:text="Description"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:textColor="#000000"
         android:textStyle="italic" />
 

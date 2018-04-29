@@ -1,2 +1,5 @@
 <resources>
+    <string name="login_prompt_accid">Account ID</string>
+    <string name="login_prompt_accpass">Account Pass</string>
+    <string name="action_sign_in">Sign In</string>
 </resources>
