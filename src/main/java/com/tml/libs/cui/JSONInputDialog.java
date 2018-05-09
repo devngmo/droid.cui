@@ -190,7 +190,15 @@ public class JSONInputDialog extends Dialog {
         b.setTitle(title);
         b.setCancelable(false);
         b.setMessage(msg);
-        b.setPositiveButton("OK", okListener);
+        if (okListener != null)
+            b.setPositiveButton("OK", okListener);
+        else
+            b.setPositiveButton("OK", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
         return b.create();
     }
 
