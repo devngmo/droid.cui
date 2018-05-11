@@ -27,20 +27,18 @@ public abstract class SimpleListBaseActivity extends AppCompatActivity {
     protected String dlgAddNewItemMessage = "";
     protected String dlgAddNewItemFieldName = "Name";
     protected int optionMenuID = -1;
-
+    protected FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_base_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.scla_fab);
+        fab = (FloatingActionButton) findViewById(R.id.slba_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
                 showDialogAddNewItem();
             }
         });
