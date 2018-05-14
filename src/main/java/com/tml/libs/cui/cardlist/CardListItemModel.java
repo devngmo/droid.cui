@@ -44,7 +44,7 @@ public class CardListItemModel {
     }
 
     public void onBindView(int position, CardListAdapter.CardItemHolder cardItemHolder) {
-        StaticLogger.D("CardListItemModel::onBindView " + position + " hasBg " + hasCustomBg());
+        //StaticLogger.D("CardListItemModel::onBindView " + position + " hasBg " + hasCustomBg());
         this.position = position;
         itemHolder = cardItemHolder;
     }
