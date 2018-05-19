@@ -10,8 +10,9 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import android.os.StatFs
+import android.widget.Toast
 import com.tml.libs.cutils.StaticLogger
+import java.io.File
 import java.io.FileNotFoundException
 
 
@@ -72,7 +73,8 @@ public class CameraHelper {
             return bm
         }
 
-        @JvmStatic fun getThumbnail(context: Context, theUri: Uri, thumbnailWidth:Int): Bitmap {
+        @JvmStatic fun getThumbnail(context: Context, theUri: Uri, thumbnailWidth:Int): Bitmap? {
+            StaticLogger.D("CameraHelper", "getThumbnail")
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
             options.outWidth = 1
@@ -80,13 +82,19 @@ public class CameraHelper {
             var fileDescriptor: ParcelFileDescriptor? = null
             try {
                 fileDescriptor = context.contentResolver.openFileDescriptor(theUri, "r")
+                StaticLogger.D("CameraHelper", "fileDescriptor " + fileDescriptor.fileDescriptor)
             } catch (e: FileNotFoundException) {
-                e.printStackTrace()
+                StaticLogger.E(e)
             }
 
             val bmpInfo = BitmapFactory.decodeFileDescriptor(
                     fileDescriptor!!.fileDescriptor, null, options)
 
+            if (bmpInfo == null)
+            {
+                StaticLogger.E("CameraHelper", "can not get bmp info from file descriptor")
+                return null
+            }
             StaticLogger.D(this, "bmpInfo ${bmpInfo.width} x ${bmpInfo.height}")
 
             var sampleSize = bmpInfo.width / thumbnailWidth
@@ -97,7 +105,6 @@ public class CameraHelper {
                     fileDescriptor!!.fileDescriptor, null, options)
             return thumbnail
         }
-
 
         @JvmStatic fun getRotationFromCamera(context: Context, imageFile: Uri): Int {
             var rotate = 0
@@ -117,6 +124,48 @@ public class CameraHelper {
                 e.printStackTrace()
             }
             return rotate
+        }
+
+        @JvmStatic fun getThumbnailOfCapturedPhoto(context:Context, cacheFile: File): Bitmap? {
+            StaticLogger.D("CameraHelper", "getThumbnailOfCapturedPhoto...")
+            try {
+                if (!cacheFile.exists()) {
+                    StaticLogger.D("CameraHelper", " cache file not exist: " + cacheFile.absolutePath)
+                    return null
+                }
+
+                val capturedCacheFileUri = Uri.fromFile(cacheFile)
+                StaticLogger.D("CameraHelper", "uri  " + capturedCacheFileUri.toString())
+                var bmp = CameraHelper.getImageResized(context, capturedCacheFileUri)
+                        //CameraHelper.getThumbnail(context, capturedCacheFileUri, 100)
+                bmp?.let {
+                    StaticLogger.D("CameraHelper", "thumbnail size " + it.width)
+                    //getImageResized(getContext(), capturedCacheFileUri);
+                    val rotation = CameraHelper.getRotationFromCamera(context, capturedCacheFileUri)
+                    bmp = CameraHelper.rotate(it, rotation)
+                }
+                return bmp
+            } catch (ex: Exception) {
+                StaticLogger.E(ex)
+            }
+            return null
+        }
+
+        @JvmStatic fun getBitmapFromCameraCapture(data: Intent?): Bitmap? {
+            if (data == null) {
+                StaticLogger.E(this, "camera data is null")
+                return null
+            }
+// if (bmp == null) {
+            // Uri uri = data.getData();
+            // try {
+            // bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            // return bmp;
+            // } catch (IOException e) {
+            // StaticLogger.E(e);
+            // }
+            // }
+            return data.extras!!.get("data") as Bitmap
         }
     }
 }
