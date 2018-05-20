@@ -61,10 +61,10 @@ public class CameraHelper {
             return actuallyUsableBitmap
         }
 
-        @JvmStatic val minWidthQuality = 480
+        @JvmStatic val minWidthQuality = 128
         @JvmStatic fun getImageResized(context: Context, selectedImage: Uri): Bitmap {
             var bm: Bitmap? = null
-            val sampleSizes = intArrayOf(5, 3, 2, 1)
+            val sampleSizes = intArrayOf(64,32,24,16,8,4, 3, 2, 1)
             var i = 0
             do {
                 bm = decodeBitmap(context, selectedImage, sampleSizes[i])
@@ -73,36 +73,31 @@ public class CameraHelper {
             return bm
         }
 
-        @JvmStatic fun getThumbnail(context: Context, theUri: Uri, thumbnailWidth:Int): Bitmap? {
-            StaticLogger.D("CameraHelper", "getThumbnail")
+        @JvmStatic fun getThumbnail(context: Context, file: File, thumbnailWidth:Int): Bitmap? {
+            StaticLogger.D("CameraHelper", "getThumbnail ${file}")
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
-            options.outWidth = 1
-            options.outHeight = 1
-            var fileDescriptor: ParcelFileDescriptor? = null
-            try {
-                fileDescriptor = context.contentResolver.openFileDescriptor(theUri, "r")
-                StaticLogger.D("CameraHelper", "fileDescriptor " + fileDescriptor.fileDescriptor)
-            } catch (e: FileNotFoundException) {
-                StaticLogger.E(e)
-            }
+//            var fileDescriptor: ParcelFileDescriptor? = null
+//            try {
+//                fileDescriptor = context.contentResolver.openFileDescriptor(theUri, "r")
+//                StaticLogger.D("CameraHelper", "fileDescriptor " + fileDescriptor.fileDescriptor.toString())
+//            } catch (e: FileNotFoundException) {
+//                StaticLogger.E("CameraHelper", "exception when open file", e)
+//            }
 
-            val bmpInfo = BitmapFactory.decodeFileDescriptor(
-                    fileDescriptor!!.fileDescriptor, null, options)
+            val bmpInfo = BitmapFactory.decodeFile(file.absolutePath, options)
+            StaticLogger.D(this, "bmpInfo ${options.outWidth} x ${options.outHeight}")
 
-            if (bmpInfo == null)
-            {
-                StaticLogger.E("CameraHelper", "can not get bmp info from file descriptor")
-                return null
-            }
-            StaticLogger.D(this, "bmpInfo ${bmpInfo.width} x ${bmpInfo.height}")
-
-            var sampleSize = bmpInfo.width / thumbnailWidth
+            var sampleSize = 1
+            if (options.outWidth > thumbnailWidth)
+                sampleSize = (options.outWidth * 1.0f / thumbnailWidth).toInt()
             options.inJustDecodeBounds = false
             options.inSampleSize = sampleSize
             StaticLogger.D(this, "sample size $sampleSize")
-            val thumbnail = BitmapFactory.decodeFileDescriptor(
-                    fileDescriptor!!.fileDescriptor, null, options)
+            val thumbnail = BitmapFactory.decodeFile(
+                    file.absolutePath,
+                    //fileDescriptor!!.fileDescriptor, null,
+                    options)
             return thumbnail
         }
 
@@ -126,7 +121,7 @@ public class CameraHelper {
             return rotate
         }
 
-        @JvmStatic fun getThumbnailOfCapturedPhoto(context:Context, cacheFile: File): Bitmap? {
+        @JvmStatic fun getThumbnailOfCapturedPhoto(context:Context, cacheFile: File, thumbnailWidth:Int): Bitmap? {
             StaticLogger.D("CameraHelper", "getThumbnailOfCapturedPhoto...")
             try {
                 if (!cacheFile.exists()) {
@@ -136,8 +131,8 @@ public class CameraHelper {
 
                 val capturedCacheFileUri = Uri.fromFile(cacheFile)
                 StaticLogger.D("CameraHelper", "uri  " + capturedCacheFileUri.toString())
-                var bmp = CameraHelper.getImageResized(context, capturedCacheFileUri)
-                        //CameraHelper.getThumbnail(context, capturedCacheFileUri, 100)
+                var bmp = //CameraHelper.getImageResized(context, capturedCacheFileUri)
+                        CameraHelper.getThumbnail(context, cacheFile, thumbnailWidth)
                 bmp?.let {
                     StaticLogger.D("CameraHelper", "thumbnail size " + it.width)
                     //getImageResized(getContext(), capturedCacheFileUri);
@@ -166,6 +161,10 @@ public class CameraHelper {
             // }
             // }
             return data.extras!!.get("data") as Bitmap
+        }
+
+        fun createThumbnail(c: Context, f: File, width: Int): Bitmap? {
+            return null
         }
     }
 }
