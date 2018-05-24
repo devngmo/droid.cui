@@ -2,6 +2,7 @@ package com.tml.libs.cui.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,13 +29,15 @@ public abstract class SimpleListBaseActivity extends AppCompatActivity {
     protected String dlgAddNewItemFieldName = "Name";
     protected int optionMenuID = -1;
     protected FloatingActionButton fab;
+    protected SwipeRefreshLayout SRL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_base_activity);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar );
 
+        SRL = (SwipeRefreshLayout)findViewById(R.id.slbcSRL);
         fab = (FloatingActionButton) findViewById(R.id.slba_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,8 +46,25 @@ public abstract class SimpleListBaseActivity extends AppCompatActivity {
             }
         });
 
+
+        SRL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                doReloadContent();
+            }
+        });
+
         FragmentCardList frag = FragmentCardList.newInstance(createAdapter());
         getSupportFragmentManager().beginTransaction().replace(R.id.rv_container, frag).commit();
+    }
+
+    protected void doReloadContent() {
+        SRL.setRefreshing(true);
+    }
+
+    protected void onReloadContentFinished() {
+        SRL.setRefreshing(false);
+        rvA.notifyDataSetChanged();
     }
 
     private void showDialogAddNewItem() {

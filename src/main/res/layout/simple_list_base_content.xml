@@ -8,9 +8,16 @@
     tools:context=".activities.SimpleListBaseActivity"
     tools:showIn="@layout/simple_list_base_activity">
 
-    <FrameLayout
-        android:id="@+id/rv_container"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/slbcSRL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/rv_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </android.support.constraint.ConstraintLayout>
