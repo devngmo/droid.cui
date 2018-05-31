@@ -13,6 +13,7 @@ import android.view.View;
 import com.tml.libs.cui.JSONInputDialog;
 import com.tml.libs.cui.R;
 import com.tml.libs.cui.cardlist.CardListAdapter;
+import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardTitleDesc;
 import com.tml.libs.cui.cardlist.FragmentCardList;
 
@@ -114,7 +115,14 @@ public abstract class SimpleListBaseActivity extends AppCompatActivity {
                 return handleOnLongClickListItem(index);
             }
         });
+
+        setupCardVisualStyle();
         return rvA;
+    }
+
+    protected void setupCardVisualStyle() {
+        //TODO: fix bug background card not wrap content after notifychange
+        //rvA.setVisualStyle(CardListItemModel.VSNAME_NORMAL, getResources().getDrawable(R.drawable.card_round_box_normal));
     }
 
     protected abstract void onClickListItem(int index);
