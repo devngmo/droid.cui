@@ -14,8 +14,8 @@ val ARG_IMAGE_FILE_URI = "img.file.uri"
 val ARG_IMAGE_FILE_TITLE = "img.file.title"
 class ImageViewerActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.image_viewer_activity)
         var fileURI :String = ""
         var fileTitle : String = ""
