@@ -9,6 +9,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.tml.libs.cui.helpers.GoogleMapAPIHelper
+import com.tml.libs.cutils.StaticLogger
 
 interface LocationTrackingControllerInterface {
     fun startTracking()
@@ -86,6 +87,7 @@ open class SimpleGPSLocationTrackingController(val activity:Activity, val locLis
     }
 
     override fun stopTracking() {
+        StaticLogger.I(this, "[LOCATION TRACKING] stop")
         locationUpdateRequested = false
         try {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback)
@@ -95,6 +97,7 @@ open class SimpleGPSLocationTrackingController(val activity:Activity, val locLis
     }
 
     override fun startTracking() {
+        StaticLogger.I(this, "[LOCATION TRACKING] start")
         startDetectTime = System.currentTimeMillis()
 
         if (locationUpdateRequested)
