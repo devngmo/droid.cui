@@ -148,6 +148,14 @@ public class JSONInputDialog extends Dialog {
         return f;
     }
 
+    public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options, boolean allowMultipleChoice, JSONDialogListener listener) {
+        ArrayList<String> ls = new ArrayList<>();
+        for (String o : options
+             ) {
+            ls.add(o);
+        }
+        return createOptionSelectionDialog(ctx, title, ls, allowMultipleChoice, listener);
+    }
     /**
      * use json.getString("Options") to get list of selected indices. ex: 0,1,2
      *
@@ -158,7 +166,7 @@ public class JSONInputDialog extends Dialog {
      * @param listener
      * @return
      */
-    public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options, boolean allowMultipleChoice, JSONDialogListener listener) {
+    public static Dialog createOptionSelectionDialog(Context ctx, String title, ArrayList<String> options, boolean allowMultipleChoice, JSONDialogListener listener) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("title", title);
