@@ -17,8 +17,8 @@ class ImageViewerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.image_viewer_activity)
-        var fileURI :String = ""
-        var fileTitle : String = ""
+        var fileURI  = ""
+        var fileTitle  = ""
         try {
             fileURI = intent.extras.getString(ARG_IMAGE_FILE_URI)
             fileTitle = intent.extras.getString(ARG_IMAGE_FILE_TITLE)
