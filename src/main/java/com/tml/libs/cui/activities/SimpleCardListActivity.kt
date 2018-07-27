@@ -1,6 +1,7 @@
 package com.tml.libs.cui.activities
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.simple_card_list_activity.*
 open class SimpleCardListActivity : AppCompatActivity() {
     lateinit var rvA: CardListAdapter<CardTitleDesc>
     internal var highlightSelectedCard = false
+    var needSetupActionBar = false
 
     open fun getLayoutID(): Int {
         return R.layout.simple_card_list_activity
@@ -27,14 +29,20 @@ open class SimpleCardListActivity : AppCompatActivity() {
         return R.layout.card_title_desc
     }
 
+    open fun getFAB():FloatingActionButton? {
+        return scla_fab
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutID())
-        setSupportActionBar(scla_toolbar)
+        if (needSetupActionBar)
+            setSupportActionBar(scla_toolbar)
 
-        scla_fab.setOnClickListener { view ->
-            onClickFloatButtonAdd()
-        }
+        if (getFAB() != null)
+            getFAB()!!.setOnClickListener { view ->
+                onClickFloatButtonAdd()
+            }
 
         initRecyclerViewFragment()
     }
