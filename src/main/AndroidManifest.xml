@@ -9,12 +9,13 @@
     <!-- &gt; -->
     <!-- </application> -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application>
         <activity android:name=".activities.JSONObjectEditorActivity" />
-        <activity android:name=".activities.ImageViewerActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
-
+        <activity
+            android:name=".activities.ImageViewerActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".activities.QRCodeScanActivity"></activity>
     </application>
 
 </manifest>
