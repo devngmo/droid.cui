@@ -60,6 +60,10 @@ public class FragmentCardList extends Fragment {
         }
     }
 
+    public void scrollTo(int x, int y) {
+        rvItems.scrollTo(x, y);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
