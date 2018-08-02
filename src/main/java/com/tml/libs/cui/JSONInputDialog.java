@@ -55,6 +55,7 @@ public class JSONInputDialog extends Dialog {
     private static final int HZ_CELL_MARGIN = 8;
     public static final String USERPASS_FIELD_ID = "id";
     public static final String USERPASS_FIELD_PASS = "pass";
+    boolean pickOnClick = false;
 
     public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, String fieldName, JSONDialogListener listener) {
         JSONObject obj = new JSONObject();
@@ -148,13 +149,18 @@ public class JSONInputDialog extends Dialog {
         return f;
     }
 
-    public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options, boolean allowMultipleChoice, JSONDialogListener listener) {
+    public static Dialog createOptionSelectionDialog(Context ctx, String title, String[] options,
+                                                     boolean allowMultipleChoice,
+                                                     JSONDialogListener listener,
+                                                     boolean pickOnClick
+                                                     ) {
         ArrayList<String> ls = new ArrayList<>();
         for (String o : options
              ) {
             ls.add(o);
         }
-        return createOptionSelectionDialog(ctx, title, ls, allowMultipleChoice, listener);
+        return createOptionSelectionDialog(ctx, title, ls, allowMultipleChoice,
+                listener, pickOnClick);
     }
     /**
      * use json.getString("Options") to get list of selected indices. ex: 0,1,2
@@ -166,11 +172,17 @@ public class JSONInputDialog extends Dialog {
      * @param listener
      * @return
      */
-    public static Dialog createOptionSelectionDialog(Context ctx, String title, ArrayList<String> options, boolean allowMultipleChoice, JSONDialogListener listener) {
+    public static Dialog createOptionSelectionDialog(Context ctx, String title,
+                                                     ArrayList<String> options,
+                                                     boolean allowMultipleChoice,
+                                                     JSONDialogListener listener,
+                                                     boolean pickOnClick
+                                                     ) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("title", title);
             obj.put("msg", "");
+            obj.put("pickOnClick", pickOnClick);
             JSONArray fields = new JSONArray();
 
             JSONObject fieldOptionsList = new JSONObject();
@@ -283,6 +295,8 @@ public class JSONInputDialog extends Dialog {
         txtMsg = (TextView) findViewById(R.id.txt_message);
         txtTitle= (TextView)findViewById(R.id.txt_title);
         pnlContent = (LinearLayout)findViewById(R.id.dlg_fragment_okcancel_content);
+
+
         btnOK = (Button)findViewById(R.id.dlg_fragment_okcancel_btn_ok);
         btnCancel = (Button)findViewById(R.id.dlg_fragment_okcancel_btn_cancel);
         btnOK.setOnClickListener(new View.OnClickListener() {
@@ -301,6 +315,18 @@ public class JSONInputDialog extends Dialog {
             }
         });
 
+        try {
+            if (input.has("pickOnClick"))
+                pickOnClick = input.getBoolean("pickOnClick");
+            if (pickOnClick)
+            {
+                btnOK.setVisibility(View.GONE);
+                btnCancel.setVisibility(View.GONE);
+            }
+        }
+        catch (Exception ex) {
+
+        }
         createViewFromJSON();
 
     }
@@ -521,6 +547,8 @@ public class JSONInputDialog extends Dialog {
 
         CardListAdapter<CardText> rva = null;
         try {
+
+
             final List<String> options = new ArrayList<>();
             final String fieldName = fieldData.getString("name");
             final boolean multiSelect = fieldData.getBoolean("multiple");
@@ -558,6 +586,13 @@ public class JSONInputDialog extends Dialog {
                     else {
                         ls.clear();
                         ls.add("" + index);
+                        if (pickOnClick) {
+                            updateJSONOutput();
+                            boolean handled = mListener.onConfirm(output);
+                            if (handled) {
+                                dismiss();
+                            }
+                        }
 
                     }
                 }
