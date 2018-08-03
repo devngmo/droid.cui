@@ -18,6 +18,7 @@ public class CardListBasedFragment<T extends CardListItemModel> extends Fragment
     protected CardListAdapter<T> rvA;
     protected boolean playSoundWhenUserClickCard = true;
     boolean highlightSelectedCard = false;
+
     public CardListBasedFragment() {
     }
 
@@ -97,7 +98,7 @@ public class CardListBasedFragment<T extends CardListItemModel> extends Fragment
         return 0;
     }
 
-    protected void updateUI() {
+    public void updateUI() {
         if (isVisible())
             rvA.notifyDataSetChanged();
     }
