@@ -51,6 +51,7 @@ public abstract class SimpleListBaseActivity extends AppCompatActivity {
         SRL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (SRL.isRefreshing()) return;
                 doReloadContent();
             }
         });
