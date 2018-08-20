@@ -60,7 +60,7 @@ class GoogleMapAPIHelper {
             val builder = LocationSettingsRequest.Builder()
             builder.addLocationRequest(locRequest)
             builder.setAlwaysShow(true)
-            var lsr = builder.build()
+            val lsr = builder.build()
 
             val result = LocationServices.SettingsApi.checkLocationSettings(
                     apiClient,
