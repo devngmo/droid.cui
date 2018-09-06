@@ -66,7 +66,7 @@ public class GoogleMapHelper {
      * @param longA
      * @param latB
      * @param longB
-     * @return
+     * @return distance in meter
      */
     public static float CalcDistance(float latA, float longA,
                                      float latB, float longB) {
