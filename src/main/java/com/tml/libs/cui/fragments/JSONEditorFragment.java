@@ -14,6 +14,7 @@ import com.tml.libs.cui.JSONEditorDocument;
 import com.tml.libs.cui.JSONInputDialog;
 import com.tml.libs.cui.R;
 import com.tml.libs.cui.cardlist.CardListAdapter;
+import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
 import com.tml.libs.cui.cardlist.FragmentCardList;
 import com.tml.libs.cutils.JSONUtils;
@@ -101,7 +102,7 @@ public class JSONEditorFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_jsoneditor, container, false);
 
-        txtPath = (TextView)root.findViewById(R.id.browseNodePath);
+        txtPath = root.findViewById(R.id.browseNodePath);
         FragmentCardList frag = FragmentCardList.newInstance(createAdapter());
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.rv_marker, frag).commit();
 
@@ -154,6 +155,8 @@ public class JSONEditorFragment extends Fragment {
                     }
                 }
         );
+
+        rvA.setVisualStyle(CardListItemModel.VSNAME_NORMAL, getResources().getDrawable(R.drawable.card_round_box_normal));
         return rvA;
     }
 
@@ -165,10 +168,10 @@ public class JSONEditorFragment extends Fragment {
 
         String desc = "";
         if (o instanceof JSONObject) {
-            desc = ((JSONObject) o).toString();
+            desc = o.toString();
 
         } else if (o instanceof JSONArray) {
-            desc = ((JSONArray) o).toString();
+            desc = o.toString();
         } else {
             desc = "" + o;
         }

@@ -22,7 +22,13 @@ import java.util.Map;
 
 public class JSONObjectEditorActivity extends AppCompatActivity {
     public  interface EditorMenuListener {
-        void onSave(JSONObjectEditorActivity sender, JSONEditorDocument doc);
+        /**
+         *
+         * @param sender
+         * @param doc
+         * @return True if this Activity should Finish after Save
+         */
+        boolean onSave(JSONObjectEditorActivity sender, JSONEditorDocument doc);
     }
 
     private static final String ARG_INSTANCE_UID = "instance.uid";
@@ -89,7 +95,9 @@ public class JSONObjectEditorActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            listener.onSave(this, frag.getDoc());
+            boolean shouldFinish = listener.onSave(this, frag.getDoc());
+            if (shouldFinish)
+                finish();
             return true;
         }
         else if (id == R.id.action_add_value) {
