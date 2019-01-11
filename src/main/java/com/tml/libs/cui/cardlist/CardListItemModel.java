@@ -2,9 +2,13 @@ package com.tml.libs.cui.cardlist;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.print.PrintAttributes;
 import android.util.Log;
 import android.view.View;
 
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import com.tml.libs.cutils.LoggableClass;
 import com.tml.libs.cutils.StaticLogger;
 
@@ -19,6 +23,7 @@ public class CardListItemModel {
     public String bgNormalVSName = VSNAME_NORMAL;
     public String bgSelectedVSName = VSNAME_SELECTED;
     protected CardListAdapter.CardItemHolder itemHolder;
+    ViewGroup.MarginLayoutParams layoutParam = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     Object data = null;
     public void setData(Object data) {
@@ -47,6 +52,7 @@ public class CardListItemModel {
         //StaticLogger.D("CardListItemModel::onBindView " + position + " hasBg " + hasCustomBg());
         this.position = position;
         itemHolder = cardItemHolder;
+        itemHolder.itemView.setLayoutParams(layoutParam);
     }
 
     public void setBgDrawable(Drawable bg) {
@@ -77,5 +83,9 @@ public class CardListItemModel {
 
     protected Resources getResource() {
         return itemHolder.itemView.getContext().getResources();
+    }
+
+    public void setMargin(int left, int top, int right, int bottom) {
+        layoutParam.setMargins(left, top, right, bottom);
     }
 }
