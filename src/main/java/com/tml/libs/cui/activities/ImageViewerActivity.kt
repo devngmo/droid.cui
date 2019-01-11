@@ -18,21 +18,19 @@ class ImageViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.image_viewer_activity)
         var fileURI  = ""
-        var fileTitle  = ""
         try {
             fileURI = intent.extras.getString(ARG_IMAGE_FILE_URI)
-            fileTitle = intent.extras.getString(ARG_IMAGE_FILE_TITLE)
-            var bmp = loadBitmap(fileURI)
+            val fileTitle = intent.extras.getString(ARG_IMAGE_FILE_TITLE)
+            val bmp = loadBitmap(fileURI)
             ivaImg.setImageBitmap(bmp)
-            ivaTitle.setText(fileTitle)
+            ivaTitle.text = fileTitle
         }
         catch (ex:Exception) {
-            JSONInputDialog.createMessageBoxOK(this, "Lỗi mở file ảnh", "Không mở được file: ${fileURI}", object: DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    dialog!!.dismiss()
-                    finish()
-                }
-            })
+            JSONInputDialog.createMessageBoxOK(this, "Lỗi mở file ảnh", "Không mở được file: $fileURI"
+            ) { dialog, which ->
+                dialog!!.dismiss()
+                finish()
+            }
         }
     }
 
