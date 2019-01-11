@@ -127,12 +127,12 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
         pGridRulerText.setTextSize(getGridFontSize());
     }
 
-    public void handleGestureOnShowPress(MotionEvent e) {
-
+    public boolean handleGestureOnShowPress(MotionEvent e) {
+        return false;
     }
 
-    public void handleGestureOnLongPress(MotionEvent e) {
-
+    public boolean handleGestureOnLongPress(MotionEvent e) {
+        return false;
     }
 
     public boolean handleGestureOnSingleTapUp(MotionEvent e) {
@@ -158,7 +158,7 @@ public class PVAGridSpaceAdapter extends PaintViewAdapter {
     protected int vpLeft;
     protected int vpTop;
 
-    private void calcScreenParams(Canvas c) {
+    protected void calcScreenParams(Canvas c) {
         scrW = c.getWidth();
         scrH = c.getHeight();
 
