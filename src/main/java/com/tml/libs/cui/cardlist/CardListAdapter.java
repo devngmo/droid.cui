@@ -1,23 +1,28 @@
 package com.tml.libs.cui.cardlist;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tml.libs.cutils.StaticLogger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by TML on 04/01/2017.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.Adapter<CardListAdapter.CardItemHolder> {
-
     public boolean showSelection = false;
+    public static final int MODE_MULTIPLE = 2;
+    public static final int MODE_SINGLE = 1;
+    public int selectionMode = MODE_SINGLE;
     Map<String, CardChildViewClickListener> cardChildViewListenerMap = new HashMap<>();
     public CardChildViewClickListener getChildClickListener(String key) {
         return cardChildViewListenerMap.get(key);
@@ -27,7 +32,7 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     public void selectCardByID(String id) {
     }
 
-    boolean enableCardCustomBackground = false;
+    private boolean enableCardCustomBackground = false;
     public boolean isEnableCardCustomBackground() {
         return enableCardCustomBackground;
     }
@@ -40,10 +45,11 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         void onClick(int cardPosition, CardListAdapter.CardItemHolder card, int viewPosition, View v);
     }
 
-    Map<String, Drawable> visualStyles = new HashMap<>();
+    private Map<String, Drawable> visualStyles = new HashMap<>();
     private static final String TAG = "CardListAdapter";
 
-    int selectedIndex = -1;
+    private int selectedIndex = -1;
+    private List<Integer> indices = new ArrayList<>();
 
     public T getCardAt(int index) {
         return provider.getModel(index);
@@ -56,8 +62,13 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
             mCardClickListener.onClickCard(position);
     }
 
-    public void selectItemAt(int position, CardItemHolder<T> holder) {
+    private void selectItemAt(int position, CardItemHolder<T> holder) {
         selectedIndex = position;
+        if (!indices.contains(position))
+            indices.add(position);
+        else {
+            indices.remove(position);
+        }
         notifyDataSetChanged();
         if (mCardClickListener != null)
             mCardClickListener.onClickCard(position);
@@ -73,10 +84,10 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         boolean onLongClickCard(int index);
     }
 
-    CardClickListener mCardClickListener = null;
+    private CardClickListener mCardClickListener;
 
-    int mLayoutID;
-    CardListModelProvider<T> provider;
+    private int mLayoutID;
+    private CardListModelProvider<T> provider;
 
     public void setProvider(CardListModelProvider<T> provider) {
         this.provider = provider;
@@ -91,7 +102,7 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     }
 
     @Override
-    public CardItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CardItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(mLayoutID, parent, false);
 
@@ -100,7 +111,7 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
     }
 
     @Override
-    public void onBindViewHolder(final CardListAdapter.CardItemHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CardListAdapter.CardItemHolder holder, int position) {
         //StaticLogger.D(TAG, "onBindViewHolder: pos " + position);
         T model = provider.getModel(position);
 
@@ -113,15 +124,24 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         holder.onBindModel(this, position, model);
 
         if (showSelection) {
-            if (selectedIndex == position)
-                model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
-            else {
-                if (model.hasCustomBg()) {
-                    //StaticLogger.D("showCustomBg " + position);
-                    model.showCustomBg();
+            if (selectionMode == MODE_MULTIPLE) {
+                if (indices.contains(position))
+                    model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
+                else {
+                    if (model.hasCustomBg()) {
+                        model.showCustomBg();
+                    } else
+                        model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
                 }
-                else
-                    model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+            } else {
+                if (selectedIndex == position)
+                    model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_SELECTED));
+                else {
+                    if (model.hasCustomBg()) {
+                        model.showCustomBg();
+                    } else
+                        model.setBgDrawable(getVisualStyleDrawable(CardListItemModel.VSNAME_NORMAL));
+                }
             }
         }
         else {
@@ -138,14 +158,14 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectItemAt(position, holder);
+                selectItemAt(holder.getAdapterPosition(), holder);
             }
         });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return mCardClickListener.onLongClickCard(position);
+                return mCardClickListener.onLongClickCard(holder.getAdapterPosition());
             }
         });
 
@@ -167,24 +187,25 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
         return provider.size();
     }
 
-    public class CardItemHolder<T extends CardListItemModel> extends RecyclerView.ViewHolder {
-        T cardModel;
-        CardListAdapter<T> adapter;
+    public class CardItemHolder<TCardModel extends CardListItemModel> extends RecyclerView.ViewHolder {
+        TCardModel cardModel;
+        CardListAdapter<TCardModel> adapter;
 
-        public T getCardModel() {
+        public TCardModel getCardModel() {
             return cardModel;
         }
 
         public CardItemHolder(View itemView) {
             super(itemView);
         }
-        public void onBindModel(CardListAdapter<T> adapter, int position, T cardModel) {
+
+        public void onBindModel(CardListAdapter<TCardModel> adapter, int position, TCardModel cardModel) {
             this.adapter = adapter;
             this.cardModel = cardModel;
             cardModel.onBindView(position, this);
         }
 
-        public CardListAdapter<T> getAdapter() {
+        public CardListAdapter<TCardModel> getAdapter() {
             return adapter;
         }
     }

@@ -35,21 +35,20 @@ import com.tml.libs.cui.cardlist.CardListAdapter;
 import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
 
+import com.tml.libs.cutils.StaticLogger;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by TML on 24/01/2017.
  */
 
 
+@SuppressWarnings({"unused", "WeakerAccess", "StringConcatenationInLoop"})
 public class JSONInputDialog extends Dialog {
     private static final int HZ_CELL_SIZE = 56;
     private static final int HZ_CELL_MARGIN = 8;
@@ -155,22 +154,19 @@ public class JSONInputDialog extends Dialog {
                                                      boolean pickOnClick
                                                      ) {
         ArrayList<String> ls = new ArrayList<>();
-        for (String o : options
-             ) {
-            ls.add(o);
-        }
+        Collections.addAll(ls, options);
         return createOptionSelectionDialog(ctx, title, ls, allowMultipleChoice,
                 listener, pickOnClick);
     }
     /**
      * use json.getString("Options") to get list of selected indices. ex: 0,1,2
      *
-     * @param ctx
-     * @param title
-     * @param options
-     * @param allowMultipleChoice
-     * @param listener
-     * @return
+     * @param ctx Context
+     * @param title title
+     * @param options ArrayList<String>
+     * @param allowMultipleChoice allow multiple choice or not
+     * @param listener listen
+     * @return selected indices json["Options"] = "1,2,3"
      */
     public static Dialog createOptionSelectionDialog(Context ctx, String title,
                                                      ArrayList<String> options,
@@ -201,8 +197,7 @@ public class JSONInputDialog extends Dialog {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JSONInputDialog dlg = new JSONInputDialog(ctx, obj, listener);
-        return dlg;
+        return new JSONInputDialog(ctx, obj, listener);
     }
 
     public static AlertDialog createMessageBoxOK(Context c, String title, String msg, OnClickListener okListener) {
@@ -249,9 +244,9 @@ public class JSONInputDialog extends Dialog {
         super(context);
     }
 
-    JSONDialogListener mListener;
-    JSONObject input = null;
-    JSONObject output = null;
+    private JSONDialogListener mListener;
+    private JSONObject input = null;
+    private JSONObject output = null;
     public JSONInputDialog(Context context, String jsonStrInput, JSONDialogListener listener) {
         super(context);
 
@@ -281,24 +276,23 @@ public class JSONInputDialog extends Dialog {
         super(context, cancelable, cancelListener);
     }
 
-    TextView txtTitle;
-    TextView txtMsg;
+    private TextView txtTitle;
+    private TextView txtMsg;
 
-    LinearLayout pnlContent;
-    Button btnOK, btnCancel;
-    Map<JSONObject, View> fieldViewMap = new HashMap<>();
+    private LinearLayout pnlContent;
+    private Map<JSONObject, View> fieldViewMap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dlg_fragment_okcancel);
-        txtMsg = (TextView) findViewById(R.id.txt_message);
-        txtTitle= (TextView)findViewById(R.id.txt_title);
-        pnlContent = (LinearLayout)findViewById(R.id.dlg_fragment_okcancel_content);
+        txtMsg = findViewById(R.id.txt_message);
+        txtTitle= findViewById(R.id.txt_title);
+        pnlContent = findViewById(R.id.dlg_fragment_okcancel_content);
 
 
-        btnOK = (Button)findViewById(R.id.dlg_fragment_okcancel_btn_ok);
-        btnCancel = (Button)findViewById(R.id.dlg_fragment_okcancel_btn_cancel);
+        Button btnOK = findViewById(R.id.dlg_fragment_okcancel_btn_ok);
+        Button btnCancel = findViewById(R.id.dlg_fragment_okcancel_btn_cancel);
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -325,7 +319,7 @@ public class JSONInputDialog extends Dialog {
             }
         }
         catch (Exception ex) {
-
+            StaticLogger.D("JSONInputDialog", ex.getMessage());
         }
         createViewFromJSON();
 
@@ -397,26 +391,28 @@ public class JSONInputDialog extends Dialog {
                 String fieldType = fieldData.getString("fieldType");
                 View view = fieldViewMap.get(fieldData);
 
-                if (fieldType.equals("option.list")) {
-                    String selectedIDs = "";
-                    for (String id : listSelectionMap.get(fieldData.getString("name"))) {
-                        if (selectedIDs.length() > 0)
-                            selectedIDs += ",";
-                        selectedIDs += id;
-                    }
-                    output.put(fieldData.getString("name"), selectedIDs);
-                }
-                else if (fieldType.equals("text")) {
-                    output.put(fieldData.getString("name"), ((EditText)view).getText().toString().trim());
-                }
-                else if (fieldType.equals("spinner")) {
-                    output.put(fieldData.getString("name"), ((Spinner)view).getSelectedItemPosition());
-                }
-                else if (fieldType.equals("checkbox")) {
-                    output.put(fieldData.getString("name"), ((CheckBox)view).isChecked());
-                }
-                else if (fieldType.equals("stylelistpicker")) {
-                    output.put(fieldData.getString("name"), "" + (String)view.getTag());
+                switch (fieldType) {
+                    case "option.list":
+                        String selectedIDs = "";
+                        for (String id : listSelectionMap.get(fieldData.getString("name"))) {
+                            if (selectedIDs.length() > 0)
+                                selectedIDs += ",";
+                            selectedIDs += id;
+                        }
+                        output.put(fieldData.getString("name"), selectedIDs);
+                        break;
+                    case "text":
+                        output.put(fieldData.getString("name"), ((EditText) view).getText().toString().trim());
+                        break;
+                    case "spinner":
+                        output.put(fieldData.getString("name"), ((Spinner) view).getSelectedItemPosition());
+                        break;
+                    case "checkbox":
+                        output.put(fieldData.getString("name"), ((CheckBox) view).isChecked());
+                        break;
+                    case "stylelistpicker":
+                        output.put(fieldData.getString("name"), "" + (String) view.getTag());
+                        break;
                 }
             }
         }catch (JSONException ex) {
@@ -445,40 +441,39 @@ public class JSONInputDialog extends Dialog {
 
      View createViewByField(JSONObject fieldData) throws JSONException {
         String fieldType = fieldData.getString("fieldType");
-        if (fieldType.equals("text")) {
-            EditText txt = new EditText(getContext());
-            if (fieldData.has("text"))
-                txt.setText(fieldData.getString("text"));
-            txt.setTag(fieldData);
-            txt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+         switch (fieldType) {
+             case "text":
+                 EditText txt = new EditText(getContext());
+                 if (fieldData.has("text"))
+                     txt.setText(fieldData.getString("text"));
+                 txt.setTag(fieldData);
+                 txt.addTextChangedListener(new TextWatcher() {
+                     @Override
+                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                     }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                     @Override
+                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                }
+                     }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                     @Override
+                     public void afterTextChanged(Editable s) {
 
-                }
-            });
-            return txt;
-        }
-        else if (fieldType.equals("spinner")) {
-            Spinner spinner = new Spinner(getContext());
-            ArrayAdapter<String> aa = createSpinnerAdapter(fieldData);
-            spinner.setAdapter(aa);
-            return spinner;
-        }
-        else if (fieldType.equals("option.list")) {
-            RecyclerView rv = new RecyclerView(getContext());
-            rv.setLayoutManager(new LinearLayoutManager(getContext()));
-            rv.setAdapter(createOptionListAdapter(fieldData));
-            return rv;
+                     }
+                 });
+                 return txt;
+             case "spinner":
+                 Spinner spinner = new Spinner(getContext());
+                 ArrayAdapter<String> aa = createSpinnerAdapter(fieldData);
+                 spinner.setAdapter(aa);
+                 return spinner;
+             case "option.list":
+                 RecyclerView rv = new RecyclerView(getContext());
+                 rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                 rv.setAdapter(createOptionListAdapter(fieldData));
+                 return rv;
 //            ListView lv = new ListView(getContext());
 //            ArrayAdapter<String> aa = createListViewAdapter(fieldData);
 //            lv.setAdapter(aa);
@@ -494,64 +489,61 @@ public class JSONInputDialog extends Dialog {
 //                }
 //            });
 //            return lv;
-        }
-        else if (fieldType.equals("checkbox")) {
-            CheckBox cbo = new CheckBox(getContext());
-            cbo.setChecked(false);
-            if (fieldData.has("checked"))
-                cbo.setChecked(fieldData.getBoolean("checked"));
-            cbo.setTag(fieldData);
-            return cbo;
-        }
-        else if (fieldType.equals("stylelistpicker")) {
-            LayoutInflater inflater = getLayoutInflater();
-            final FrameLayout hzCells = (FrameLayout)inflater.inflate(R.layout.hz_cells, null, false);
-            LinearLayout cellContainer = (LinearLayout)hzCells.findViewById(R.id.hz_cells_item_container);
-            final View selIndicator = hzCells.findViewById(R.id.hz_sel_indicator);
-            String[] styles = fieldData.getString("stylelist").split(",");
+             case "checkbox":
+                 CheckBox cbo = new CheckBox(getContext());
+                 cbo.setChecked(false);
+                 if (fieldData.has("checked"))
+                     cbo.setChecked(fieldData.getBoolean("checked"));
+                 cbo.setTag(fieldData);
+                 return cbo;
+             case "stylelistpicker":
+                 LayoutInflater inflater = getLayoutInflater();
+                 final FrameLayout hzCells = (FrameLayout) inflater.inflate(R.layout.hz_cells, null, false);
+                 LinearLayout cellContainer = hzCells.findViewById(R.id.hz_cells_item_container);
+                 final View selIndicator = hzCells.findViewById(R.id.hz_sel_indicator);
+                 String[] styles = fieldData.getString("stylelist").split(",");
 
-            final FrameLayout hzContainer = (FrameLayout)hzCells.findViewById(R.id.hz_container);
+                 final FrameLayout hzContainer = hzCells.findViewById(R.id.hz_container);
 
-            hzCells.setTag(styles[0]);
-            if (fieldData.has("selectedindex"))
-                hzCells.setTag(styles[fieldData.getInt("selectedindex")]);
+                 hzCells.setTag(styles[0]);
+                 if (fieldData.has("selectedindex"))
+                     hzCells.setTag(styles[fieldData.getInt("selectedindex")]);
 
-            for (int i = 0; i < styles.length; i++) {
-                TextView cell = new TextView(getContext());
-                cell.setText("Abc");
-                String[] colors = styles[i].split(":");
-                cell.setBackgroundColor((int)Long.parseLong(colors[0], 16));
-                cell.setTextColor((int)Long.parseLong(colors[1], 16));
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(HZ_CELL_SIZE, HZ_CELL_SIZE);
-                lp.setMargins(HZ_CELL_MARGIN,HZ_CELL_MARGIN,HZ_CELL_MARGIN,HZ_CELL_MARGIN);
-                cellContainer.addView(cell, lp);
-                cell.setTag(styles[i]);
-                cell.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)selIndicator.getLayoutParams();
-                        lp.setMargins(v.getLeft()-HZ_CELL_MARGIN,0,0,0);
-                        hzContainer.updateViewLayout(selIndicator, lp);
-                        hzCells.setTag(v.getTag());
-                    }
-                });
-            }
-            return  hzCells;
-        }
+                 for (String style : styles) {
+                     TextView cell = new TextView(getContext());
+                     cell.setText("Abc");
+                     String[] colors = style.split(":");
+                     cell.setBackgroundColor((int) Long.parseLong(colors[0], 16));
+                     cell.setTextColor((int) Long.parseLong(colors[1], 16));
+                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(HZ_CELL_SIZE, HZ_CELL_SIZE);
+                     lp.setMargins(HZ_CELL_MARGIN, HZ_CELL_MARGIN, HZ_CELL_MARGIN, HZ_CELL_MARGIN);
+                     cellContainer.addView(cell, lp);
+                     cell.setTag(style);
+                     cell.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+                             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) selIndicator.getLayoutParams();
+                             lp.setMargins(v.getLeft() - HZ_CELL_MARGIN, 0, 0, 0);
+                             hzContainer.updateViewLayout(selIndicator, lp);
+                             hzCells.setTag(v.getTag());
+                         }
+                     });
+                 }
+                 return hzCells;
+         }
         return null;
     }
 
 
 
     private RecyclerView.Adapter createOptionListAdapter(final JSONObject fieldData) {
-
+        boolean canSelectMulti = false;
         CardListAdapter<CardText> rva = null;
         try {
-
-
             final List<String> options = new ArrayList<>();
             final String fieldName = fieldData.getString("name");
             final boolean multiSelect = fieldData.getBoolean("multiple");
+            canSelectMulti = multiSelect;
             JSONArray arValues = null;
 
 
@@ -586,14 +578,15 @@ public class JSONInputDialog extends Dialog {
                     else {
                         ls.clear();
                         ls.add("" + index);
-                        if (pickOnClick) {
-                            updateJSONOutput();
-                            boolean handled = mListener.onConfirm(output);
-                            if (handled) {
-                                dismiss();
+                        if (!multiSelect) {
+                            if (pickOnClick) {
+                                updateJSONOutput();
+                                boolean handled = mListener.onConfirm(output);
+                                if (handled) {
+                                    dismiss();
+                                }
                             }
                         }
-
                     }
                 }
                 @Override
@@ -605,6 +598,8 @@ public class JSONInputDialog extends Dialog {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if (canSelectMulti)
+            rva.selectionMode = CardListAdapter.MODE_MULTIPLE;
 
         rva.showSelection = true;
         rva.setVisualStyle(CardListItemModel.VSNAME_NORMAL, getContext().getResources().getDrawable(R.drawable.card_round_box_normal));
