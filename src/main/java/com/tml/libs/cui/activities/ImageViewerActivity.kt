@@ -1,17 +1,17 @@
+@file:Suppress("UNUSED_ANONYMOUS_PARAMETER")
+
 package com.tml.libs.cui.activities
 
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import com.tml.libs.cui.JSONInputDialog
 import com.tml.libs.cui.R
 import kotlinx.android.synthetic.main.image_viewer_activity.*
 
-val ARG_IMAGE_FILE_URI = "img.file.uri"
-val ARG_IMAGE_FILE_TITLE = "img.file.title"
+const val ARG_IMAGE_FILE_URI = "img.file.uri"
+const val ARG_IMAGE_FILE_TITLE = "img.file.title"
 class ImageViewerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +19,8 @@ class ImageViewerActivity : AppCompatActivity() {
         setContentView(R.layout.image_viewer_activity)
         var fileURI  = ""
         try {
-            fileURI = intent.extras.getString(ARG_IMAGE_FILE_URI)
-            val fileTitle = intent.extras.getString(ARG_IMAGE_FILE_TITLE)
+            fileURI = "" + intent.extras!!.getString(ARG_IMAGE_FILE_URI)
+            val fileTitle = "" + intent.extras!!.getString(ARG_IMAGE_FILE_TITLE)
             val bmp = loadBitmap(fileURI)
             ivaImg.setImageBitmap(bmp)
             ivaTitle.text = fileTitle
