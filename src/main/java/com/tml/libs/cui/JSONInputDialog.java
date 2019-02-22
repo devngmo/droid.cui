@@ -15,11 +15,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethod;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,6 +38,7 @@ import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
 
 import com.tml.libs.cutils.StaticLogger;
+import com.tml.libs.cutils.SysUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -298,8 +301,16 @@ public class JSONInputDialog extends Dialog {
             public void onClick(View v) {
                 updateJSONOutput();
                 boolean handled = mListener.onConfirm(output);
-                if (handled)
+                if (handled) {
+                    try {
+                        if (firstTxt != null)
+                            SysUtils.hideSoftKeyboard(getContext(), firstTxt.getWindowToken());
+                    }
+                    catch (Exception ex) {
+
+                    }
                     dismiss();
+                }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -322,9 +333,11 @@ public class JSONInputDialog extends Dialog {
             StaticLogger.D("JSONInputDialog", ex.getMessage());
         }
         createViewFromJSON();
-
+        if (firstTxt != null) {
+            SysUtils.forceShowSoftKeyboard(getContext());
+        }
     }
-
+    EditText firstTxt = null;
     private void createViewFromJSON() {
         try {
             if (input.has("title")) {
@@ -444,8 +457,33 @@ public class JSONInputDialog extends Dialog {
          switch (fieldType) {
              case "text":
                  EditText txt = new EditText(getContext());
+                 if (firstTxt == null)
+                     firstTxt = txt;
                  if (fieldData.has("text"))
                      txt.setText(fieldData.getString("text"));
+
+                 if (fieldData.has("input.type"))
+                 {
+                     String inpType = fieldData.getString("input.type");
+                     switch (inpType) {
+                         case "email":
+                             txt.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                             break;
+                         case "number":
+                             txt.setInputType(InputType.TYPE_CLASS_NUMBER);
+                             break;
+                         case "text.password":
+                             txt.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                             break;
+                         case "number.password":
+                             txt.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                             break;
+                         case "phone":
+                             txt.setInputType(InputType.TYPE_CLASS_PHONE);
+                             break;
+                     }
+                 }
+
                  txt.setTag(fieldData);
                  txt.addTextChangedListener(new TextWatcher() {
                      @Override
