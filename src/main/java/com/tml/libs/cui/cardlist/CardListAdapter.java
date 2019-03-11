@@ -64,10 +64,12 @@ public class CardListAdapter<T extends CardListItemModel> extends RecyclerView.A
 
     private void selectItemAt(int position, CardItemHolder<T> holder) {
         selectedIndex = position;
-        if (!indices.contains(position))
-            indices.add(position);
-        else {
-            indices.remove(position);
+        if (selectionMode == MODE_MULTIPLE) {
+            if (!indices.contains(position))
+                indices.add(position);
+            else {
+                indices.remove(position);
+            }
         }
         notifyDataSetChanged();
         if (mCardClickListener != null)
