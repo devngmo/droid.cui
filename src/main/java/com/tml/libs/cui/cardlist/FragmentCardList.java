@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.tml.libs.cui.R;
 
+
 public class FragmentCardList extends Fragment {
     boolean showAsGrid = false;
     int nCols = 1;
@@ -32,11 +33,20 @@ public class FragmentCardList extends Fragment {
         rvItems.setAdapter(rvItemsAdapter);
     }
 
+    private FragmentCardListInteractionListener ilis = null;
     public FragmentCardList() {
     }
 
     public static FragmentCardList newInstance(RecyclerView.Adapter<CardListAdapter.CardItemHolder> adapter) {
         FragmentCardList fragment = new FragmentCardList();
+        fragment.rvItemsAdapter = adapter;
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public static FragmentCardList newInstance(RecyclerView.Adapter<CardListAdapter.CardItemHolder> adapter, FragmentCardListInteractionListener lis) {
+        FragmentCardList fragment = new FragmentCardList();
+        fragment.ilis = lis;
         fragment.rvItemsAdapter = adapter;
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -81,12 +91,17 @@ public class FragmentCardList extends Fragment {
         else
             rvItems.setLayoutManager(new LinearLayoutManager(getContext()));
         rvItems.setAdapter(rvItemsAdapter);
+
+
+        if (ilis != null)
+            ilis.onViewCreated(rvItems);
         return root;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (ilis != null) ilis.onAttached();
     }
 
     @Override
@@ -94,4 +109,8 @@ public class FragmentCardList extends Fragment {
         super.onDetach();
     }
 
+    public interface FragmentCardListInteractionListener {
+        void onAttached();
+        void onViewCreated(RecyclerView rv);
+    }
 }

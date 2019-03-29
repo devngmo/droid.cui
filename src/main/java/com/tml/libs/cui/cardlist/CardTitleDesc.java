@@ -1,5 +1,6 @@
 package com.tml.libs.cui.cardlist;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.View;
@@ -72,6 +73,7 @@ public class CardTitleDesc extends CardListItemModel {
 
         txtTitle = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_title));
         txtTitle.setText(getTitle());
+        txtTitle.setTypeface(mTypeface);
         txtTitle.setTextColor(this.textColor);
         txtDesc = ((TextView)cardItemHolder.itemView.findViewById(R.id.card_desc));
         if (showDescAsHTML)
@@ -93,6 +95,14 @@ public class CardTitleDesc extends CardListItemModel {
         descTextColor = color;
         if (viewBg != null) {
             txtDesc.setTextColor(descTextColor);
+        }
+    }
+
+    private Typeface mTypeface = Typeface.DEFAULT;
+    public void setTypeFace(Typeface tf) {
+        mTypeface = tf;
+        if (viewBg != null) {
+            ((TextView)viewBg.findViewById(R.id.text1)).setTypeface(mTypeface);
         }
     }
 }
