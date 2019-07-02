@@ -60,6 +60,9 @@ public class JSONInputDialog extends Dialog {
     boolean pickOnClick = false;
 
     public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, String fieldName, JSONDialogListener listener) {
+        return createOneTextInputDialog(c, title, message, fieldName, listener, "text");
+    }
+    public static JSONInputDialog createOneTextInputDialog(Context c, String title, String message, String fieldName, JSONDialogListener listener, String inputType) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("title", title);
@@ -69,6 +72,7 @@ public class JSONInputDialog extends Dialog {
             fieldText.put("fieldType", "text");
             fieldText.put("name", fieldName);
             fieldText.put("text", "");
+            fieldText.put("input.type", inputType);
             fields.put(fieldText);
             obj.put("fields", fields);
 
