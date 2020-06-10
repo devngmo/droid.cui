@@ -24,7 +24,10 @@ import java.util.List;
  * Created by TML on 04/01/2017.
  */
 public class DialogHelper {
-    public static void ShowAlertDialog(Context c, String title, String message, String okText, String cancelText, DialogInterface.OnClickListener okClickListener, DialogInterface.OnClickListener cancelClickListener) {
+    public static void ShowAlertDialog(Context c, String title, String message,
+                                       String okText, String cancelText,
+                                       DialogInterface.OnClickListener okClickListener,
+                                       DialogInterface.OnClickListener cancelClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder
                 .setTitle(title)
