@@ -10,17 +10,16 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import android.widget.Toast
 import com.tml.libs.cutils.StaticLogger
 import java.io.File
 import java.io.FileNotFoundException
 
 
-public class CameraHelper {
+class CameraHelper {
     companion object {
         @JvmStatic fun takePhoto(a : Activity, requestCode:Int) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (intent.resolveActivity(a.getPackageManager()) != null) {
+            if (intent.resolveActivity(a.packageManager) != null) {
                 a.startActivityForResult(intent, requestCode)
             }
         }
@@ -32,7 +31,7 @@ public class CameraHelper {
                     return extra.get("data") as Bitmap
                 }
             }
-            return null;
+            return null
         }
 
 
@@ -45,7 +44,8 @@ public class CameraHelper {
             return bm
         }
 
-        @JvmStatic fun decodeBitmap(context: Context, theUri: Uri, sampleSize: Int): Bitmap {
+        @JvmStatic
+        fun decodeBitmap(context: Context, theUri: Uri, sampleSize: Int): Bitmap {
             val options = BitmapFactory.Options()
             options.inSampleSize = sampleSize
 
@@ -56,14 +56,14 @@ public class CameraHelper {
                 e.printStackTrace()
             }
 
-            val actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
-                    fileDescriptor!!.fileDescriptor, null, options)
-            return actuallyUsableBitmap
+            return BitmapFactory.decodeFileDescriptor(
+                fileDescriptor!!.fileDescriptor, null, options
+            )
         }
 
         @JvmStatic val minWidthQuality = 128
         @JvmStatic fun getImageResized(context: Context, selectedImage: Uri): Bitmap {
-            var bm: Bitmap? = null
+            var bm: Bitmap?
             val sampleSizes = intArrayOf(64,32,24,16,8,4, 3, 2, 1)
             var i = 0
             do {
@@ -73,8 +73,9 @@ public class CameraHelper {
             return bm
         }
 
-        @JvmStatic fun getThumbnail(context: Context, file: File, thumbnailWidth:Int): Bitmap? {
-            StaticLogger.D("CameraHelper", "getThumbnail ${file}")
+        @JvmStatic
+        fun getThumbnail(file: File, thumbnailWidth: Int): Bitmap? {
+            StaticLogger.D("CameraHelper", "getThumbnail $file")
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
 //            var fileDescriptor: ParcelFileDescriptor? = null
@@ -85,8 +86,8 @@ public class CameraHelper {
 //                StaticLogger.E("CameraHelper", "exception when open file", e)
 //            }
 
-            val bmpInfo = BitmapFactory.decodeFile(file.absolutePath, options)
-            StaticLogger.D(this, "bmpInfo ${options.outWidth} x ${options.outHeight}")
+            //val bmpInfo = BitmapFactory.decodeFile(file.absolutePath, options)
+            //StaticLogger.D(this, "bmpInfo ${options.outWidth} x ${options.outHeight}")
 
             var sampleSize = 1
             if (options.outWidth > thumbnailWidth)
@@ -94,18 +95,18 @@ public class CameraHelper {
             options.inJustDecodeBounds = false
             options.inSampleSize = sampleSize
             StaticLogger.D(this, "sample size $sampleSize")
-            val thumbnail = BitmapFactory.decodeFile(
-                    file.absolutePath,
-                    //fileDescriptor!!.fileDescriptor, null,
-                    options)
-            return thumbnail
+            return BitmapFactory.decodeFile(
+                file.absolutePath,
+                //fileDescriptor!!.fileDescriptor, null,
+                options
+            )
         }
 
         @JvmStatic fun getRotationFromCamera(context: Context, imageFile: Uri): Int {
             var rotate = 0
             try {
                 context.contentResolver.notifyChange(imageFile, null)
-                val exif = ExifInterface(imageFile.getPath())
+                val exif = ExifInterface(imageFile.path!!)
                 val orientation = exif.getAttributeInt(
                         ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_NORMAL)
@@ -130,14 +131,14 @@ public class CameraHelper {
                 }
 
                 val capturedCacheFileUri = Uri.fromFile(cacheFile)
-                StaticLogger.D("CameraHelper", "uri  " + capturedCacheFileUri.toString())
+                StaticLogger.D("CameraHelper", "uri  $capturedCacheFileUri")
                 var bmp = //CameraHelper.getImageResized(context, capturedCacheFileUri)
-                        CameraHelper.getThumbnail(context, cacheFile, thumbnailWidth)
+                        getThumbnail(cacheFile, thumbnailWidth)
                 bmp?.let {
                     StaticLogger.D("CameraHelper", "thumbnail size " + it.width)
                     //getImageResized(getContext(), capturedCacheFileUri);
-                    val rotation = CameraHelper.getRotationFromCamera(context, capturedCacheFileUri)
-                    bmp = CameraHelper.rotate(it, rotation)
+                    val rotation = getRotationFromCamera(context, capturedCacheFileUri)
+                    bmp = rotate(it, rotation)
                 }
                 return bmp
             } catch (ex: Exception) {
@@ -161,10 +162,6 @@ public class CameraHelper {
             // }
             // }
             return data.extras!!.get("data") as Bitmap
-        }
-
-        fun createThumbnail(c: Context, f: File, width: Int): Bitmap? {
-            return null
         }
     }
 }
