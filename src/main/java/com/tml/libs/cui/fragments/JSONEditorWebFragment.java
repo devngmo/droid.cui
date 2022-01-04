@@ -1,31 +1,18 @@
 package com.tml.libs.cui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.tml.libs.cui.JSONEditorDocument;
-import com.tml.libs.cui.JSONInputDialog;
 import com.tml.libs.cui.R;
-import com.tml.libs.cui.cardlist.CardListAdapter;
-import com.tml.libs.cui.cardlist.CardText;
-import com.tml.libs.cui.cardlist.FragmentCardList;
-import com.tml.libs.cutils.StaticLogger;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class JSONEditorWebFragment extends Fragment {

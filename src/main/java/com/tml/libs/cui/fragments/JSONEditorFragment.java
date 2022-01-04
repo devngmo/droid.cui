@@ -1,14 +1,13 @@
 package com.tml.libs.cui.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tml.libs.cui.JSONEditorDocument;
 import com.tml.libs.cui.JSONInputDialog;
@@ -17,7 +16,6 @@ import com.tml.libs.cui.cardlist.CardListAdapter;
 import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
 import com.tml.libs.cui.cardlist.FragmentCardList;
-import com.tml.libs.cutils.JSONUtils;
 import com.tml.libs.cutils.StaticLogger;
 
 import org.json.JSONArray;

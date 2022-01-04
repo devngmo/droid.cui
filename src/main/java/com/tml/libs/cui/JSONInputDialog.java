@@ -1,19 +1,9 @@
 package com.tml.libs.cui;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
-import android.renderscript.Int4;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -21,30 +11,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.InputMethod;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tml.libs.cui.cardlist.CardListAdapter;
 import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.CardText;
-
 import com.tml.libs.cutils.StaticLogger;
 import com.tml.libs.cutils.SysUtils;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by TML on 24/01/2017.
@@ -207,7 +202,7 @@ public class JSONInputDialog extends Dialog {
         return new JSONInputDialog(ctx, obj, listener);
     }
 
-    public static AlertDialog createMessageBoxOK(Context c, String title, String msg, OnClickListener okListener) {
+    public static AlertDialog createMessageBoxOK(Context c, String title, String msg, DialogInterface.OnClickListener okListener) {
         AlertDialog.Builder b = new AlertDialog.Builder(c);
         b.setTitle(title);
         b.setCancelable(false);
@@ -215,12 +210,7 @@ public class JSONInputDialog extends Dialog {
         if (okListener != null)
             b.setPositiveButton("OK", okListener);
         else
-            b.setPositiveButton("OK", new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            b.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         return b.create();
     }
 

@@ -1,8 +1,9 @@
 package com.tml.libs.cui.cardlist;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by TML on 03/10/2017.

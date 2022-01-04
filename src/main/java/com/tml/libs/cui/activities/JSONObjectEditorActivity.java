@@ -2,11 +2,12 @@ package com.tml.libs.cui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tml.libs.cui.JSONEditorDocument;
 import com.tml.libs.cui.JSONInputDialog;

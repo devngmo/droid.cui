@@ -3,9 +3,9 @@
 package com.tml.libs.cui.activities
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tml.libs.cui.R
 import com.tml.libs.cui.cardlist.CardListAdapter
 import com.tml.libs.cui.cardlist.CardListItemModel
@@ -30,7 +30,7 @@ open class SimpleCardListActivity : AppCompatActivity() {
         return R.layout.card_title_desc
     }
 
-    open fun getFAB():FloatingActionButton? {
+    open fun getFAB(): FloatingActionButton? {
         return scla_fab
     }
 

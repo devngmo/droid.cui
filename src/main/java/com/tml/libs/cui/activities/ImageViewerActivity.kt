@@ -5,7 +5,7 @@ package com.tml.libs.cui.activities
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.tml.libs.cui.JSONInputDialog
 import com.tml.libs.cui.R
 import kotlinx.android.synthetic.main.image_viewer_activity.*

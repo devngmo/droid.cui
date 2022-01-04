@@ -1,17 +1,17 @@
 package com.tml.libs.cui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tml.libs.cui.R;
 import com.tml.libs.cui.cardlist.CardListAdapter;
 import com.tml.libs.cui.cardlist.CardListItemModel;
 import com.tml.libs.cui.cardlist.FragmentCardList;
-import com.tml.libs.cutils.SysUtils;
 
 
 public class CardListBasedFragment<T extends CardListItemModel> extends Fragment {
