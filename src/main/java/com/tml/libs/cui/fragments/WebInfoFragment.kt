@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
-
 import com.tml.libs.cui.R
-import kotlinx.android.synthetic.main.fragment_web_info.*
 
 open class WebInfoFragment : Fragment() {
+    lateinit var wif_webview: WebView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-
-
     }
 
     override fun onCreateView(
@@ -24,7 +22,9 @@ open class WebInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_web_info, container, false)
+        val root = inflater.inflate(R.layout.fragment_web_info, container, false)
+        wif_webview = root.findViewById(R.id.wif_webview)
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

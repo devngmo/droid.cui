@@ -11,9 +11,10 @@ import com.tml.libs.cui.cardlist.CardListAdapter
 import com.tml.libs.cui.cardlist.CardListItemModel
 import com.tml.libs.cui.cardlist.CardTitleDesc
 import com.tml.libs.cui.cardlist.FragmentCardList
-import kotlinx.android.synthetic.main.simple_card_list_activity.*
+import com.tml.libs.cui.databinding.SimpleCardListActivityBinding
 
 open class SimpleCardListActivity : AppCompatActivity() {
+    lateinit var _binding : SimpleCardListActivityBinding
     lateinit var rvA: CardListAdapter<CardTitleDesc>
     internal var highlightSelectedCard = false
     var needSetupActionBar = false
@@ -31,14 +32,16 @@ open class SimpleCardListActivity : AppCompatActivity() {
     }
 
     open fun getFAB(): FloatingActionButton? {
-        return scla_fab
+        return _binding.sclaFab
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutID())
+        _binding = SimpleCardListActivityBinding.inflate(layoutInflater)
+
+        setContentView(_binding.root)
         if (needSetupActionBar)
-            setSupportActionBar(scla_toolbar)
+            setSupportActionBar(_binding.sclaToolbar)
 
         if (getFAB() != null)
             getFAB()!!.setOnClickListener { view ->
