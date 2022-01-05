@@ -6,7 +6,7 @@
     tools:context="com.tml.libs.cui.fragments.SearchViewResultListFragment">
 
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/svrlSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
